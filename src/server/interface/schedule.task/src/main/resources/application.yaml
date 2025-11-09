@@ -6,7 +6,14 @@ app:
 spring:
   profiles:
     active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/scrmstd
+    username: username
+    password: password
 
 logging:
   level:
     root: WARN
+
+mybatis:
+  sql-print-to: console
