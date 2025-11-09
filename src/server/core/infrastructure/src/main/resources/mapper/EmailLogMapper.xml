@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.EmailLogMapper">
+    <!-- 邮件发送日志(email_logs)表映射 -->
+
+    <insert id="insert" parameterType="EmailLogPo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO email_logs (task_id, template_id, tenant_id, sender, recipient, cc, subject, body, params,
+                                attachments, status, created_at)
+        VALUES (#{taskId}, #{templateId}, #{tenantId}, #{sender}, #{recipient}, #{cc}, #{subject}, #{body},
+                #{params}, #{attachments}, #{status}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="EmailLogPo">
+        UPDATE email_logs
+        SET status     = #{status},
+            updated_at = #{updatedAt},
+            version    = version + 1
+        WHERE id = #{id}
+          AND version = #{version}
+    </update>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="taskId != null">
+                AND task_id = #{taskId}
+            </if>
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="sender != null">
+                AND sender LIKE CONCAT('%', #{sender}, '%')
+            </if>
+            <if test="templateId != null">
+                AND template_id = #{templateId}
+            </if>
+            <if test="recipient != null">
+                AND recipient LIKE CONCAT('%', #{recipient}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="keywords != null">
+                AND (recipient LIKE CONCAT('%', #{keywords}, '%')
+                OR subject LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="Map">
+        SELECT COUNT(1)
+        FROM email_logs
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="EmailLogPo">
+        SELECT *
+        FROM email_logs
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id DESC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>

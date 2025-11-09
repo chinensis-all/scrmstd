@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.IndustryMapper">
+    <!-- 行业分类(tenants)表映射 -->
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="industryCode != null">
+                AND industry_code = #{industryCode}
+            </if>
+            <if test="industryName != null">
+                AND industry_name LIKE CONCAT('%', #{industryName}, '%')
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                AND id IN
+                <foreach collection="ids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="industryCodes != null and industryCodes.size() > 0">
+                AND industry_code IN
+                <foreach collection="industryCodes" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="Map">
+        SELECT COUNT(1)
+        FROM industries
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="com.mayanshe.scrmstd.application.generic.query.dto.IndustryDto">
+        SELECT *
+        FROM industries
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>

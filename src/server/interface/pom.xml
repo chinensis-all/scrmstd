@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.mayanshe</groupId>
+        <artifactId>scrmstd</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>scremstd-interface</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Interface</name>
+    <description>接口层</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>schedule.task</module>
+        <module>boss.api</module>
+        <module>saas.api</module>
+    </modules>
+</project>

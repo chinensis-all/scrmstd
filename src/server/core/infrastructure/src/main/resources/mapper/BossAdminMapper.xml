@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.BossAdminMapper">
+    <!-- BOSS管理员(_boss_admins)表映射 -->
+
+    <insert id="insert" parameterType="BossAdminPo" useGeneratedKeys="false">
+        INSERT INTO _boss_admins (id, username, password, full_name, email, phone, avatar, last_login_at, last_login_ip,
+                                  created_at)
+        VALUES (#{id}, #{username}, #{password}, #{fullName}, #{email}, #{phone}, #{avatar}, #{lastLoginAt},
+                #{lastLoginIp}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="BossAdminPo">
+        UPDATE _boss_admins
+        SET
+            <if test="password != null">
+                password      = #{password},
+            </if>
+            username      = #{username},
+            full_name     = #{fullName},
+            email         = #{email},
+            phone         = #{phone},
+            avatar        = #{avatar},
+            last_login_at = #{lastLoginAt},
+            last_login_ip = #{lastLoginIp},
+            updated_at    = #{updatedAt},
+            deleted_at    = #{deletedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE _boss_admins
+        SET deleted_at = UNIX_TIMESTAMP(now(3)) * 1000
+        WHERE id = #{id}
+          AND deleted_at = 0
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="BossAdminPo">
+        SELECT *
+        FROM _boss_admins
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="username != null">
+                AND username = #{username}
+            </if>
+            <if test="fullName != null">
+                AND full_name LIKE CONCAT('%', #{fullName}, '%')
+            </if>
+            <if test="email != null">
+                AND email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="phone != null">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="keywords != null">
+                AND (username LIKE CONCAT('%', #{keywords}, '%')
+                     OR full_name LIKE CONCAT('%', #{keywords}, '%')
+                     OR email LIKE CONCAT('%', #{keywords}, '%')
+                     OR phone LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="deleted != null and deleted == true">
+                AND deleted_at > 0
+            </if>
+            <if test="deleted != null and deleted == false">
+                AND deleted_at = 0
+            </if>
+        </where>
+    </sql>
+
+    <select id="findIdBy" parameterType="Map" resultType="Long">
+        SELECT id
+        FROM _boss_admins
+        <include refid="condition"/>
+        LIMIT 1
+    </select>
+
+    <select id="exists" parameterType="Map">
+        SELECT COUNT(1) > 0
+        FROM _boss_admins
+        <include refid="condition"/>
+    </select>
+
+    <select id="count" parameterType="Map">
+        SELECT COUNT(1)
+        FROM _boss_admins
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="BossAdminPo">
+        SELECT *
+        FROM _boss_admins
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.TenantDispatcherMapper">
+    <!-- 租户应用层处理器表(_events)表映射 -->
+
+    <insert id="insert" parameterType="TenantDispatcherPo" useGeneratedKeys="false">
+        INSERT INTO tenant_dispatchers (id, tenant_id, dispatcher_type, dispatcher_name, dispatcher_class, entity_class,
+                                        created_at)
+        VALUES (#{id}, #{tenantId}, #{dispatcherType}, #{dispatcherName}, #{dispathcherClass}, #{entityClass},
+                #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="TenantDispatcherPo">
+        UPDATE tenant_dispatchers
+        SET dispatcher_name  = #{handlerName},
+            dispatcher_class = #{handlerClass},
+            entity_class     = #{entityClass},
+            updated_at       = #{updatedAt},
+            version          = version + 1
+        WHERE id = #{id}
+          AND version = #{version}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE
+        FROM tenant_dispatchers
+        WHERE id = #{id}
+    </delete>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="dispatcherType != null">
+                AND dispatcher_type = #{dispatcherType}
+            </if>
+            <if test="dispatcherName != null">
+                AND dispatcher_name LIKE CONCAT('%', #{dispatcherName}, '%')
+            </if>
+            <if test="dispatcherClass != null">
+                AND dispatcher_class LIKE CONCAT('%', #{dispatcherClass}, '%')
+            </if>
+            <if test="entityClass != null">
+                AND entity_class LIKE CONCAT('%', #{entityClass}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="exists" parameterType="Map" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM tenant_dispatchers
+        <include refid="condition"/>
+    </select>
+
+    <select id="count" parameterType="Map">
+        SELECT COUNT(1)
+        FROM tenant_dispatchers
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="TenantDispatcherPo">
+        SELECT id, tenant_id, dispatcher_type, dispatcher_name, dispatcher_class, created_at, updated_at, version
+        FROM tenant_dispatchers
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id DESC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>

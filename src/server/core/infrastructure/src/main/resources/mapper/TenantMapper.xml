@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.TenantMapper">
+    <!-- 租户(tenants)表映射 -->
+
+    <insert id="insert" parameterType="TenantPo" useGeneratedKeys="false">
+        INSERT INTO tenants (id, tenant_name, legal_name, credit_code, industry_code, industry_name, province_id, province, city_id, city, district_id, district, address, contact_person, contact_phone, contact_email, contact_wechat, subscription_start, subscription_end, status, created_at)
+        VALUES (#{id}, #{tenantName}, #{legalName}, #{creditCode}, #{industryCode}, #{industryName}, #{provinceId}, #{province}, #{cityId}, #{city}, #{districtId}, #{district}, #{address}, #{contactPerson}, #{contactPhone}, #{contactEmail}, #{contactWechat}, #{subscriptionStart}, #{subscriptionEnd}, #{status}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="TenantPo">
+        UPDATE tenants
+        SET tenant_name        = #{tenantName},
+            legal_name         = #{legalName},
+            credit_code        = #{creditCode},
+            industry_code      = #{industryCode},
+            industry_name      = #{industryName},
+            province_id        = #{provinceId},
+            province           = #{province},
+            city_id            = #{cityId},
+            city               = #{city},
+            district_id        = #{districtId},
+            district           = #{district},
+            address            = #{address},
+            contact_person     = #{contactPerson},
+            contact_phone      = #{contactPhone},
+            contact_email      = #{contactEmail},
+            contact_wechat     = #{contactWechat},
+            subscription_plan  = #{subscriptionPlan},
+            subscription_start = #{subscriptionStart},
+            subscription_end   = #{subscriptionEnd},
+            status             = #{status},
+            updated_at         = #{updatedAt}
+        WHERE id = #{id}
+          AND deleted_at = 0
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE tenants
+        SET deleted_at = UNIX_TIMESTAMP(now(3)) * 1000
+        WHERE id = #{id}
+          AND deleted_at = 0
+    </delete>
+</mapper>

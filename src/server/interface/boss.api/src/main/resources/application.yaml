@@ -1,0 +1,17 @@
+app:
+  name: Scrm STD Boss Api
+  version: 1.0.0
+  author: 张西海[mail@sniu.com]
+
+server:
+  port: 9201
+
+spring:
+  profiles:
+    active: dev
+  main:
+    web-application-type: servlet
+
+logging:
+    level:
+      root: WARN

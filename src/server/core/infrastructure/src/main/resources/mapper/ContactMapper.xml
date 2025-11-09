@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.ContactMapper">
+    <!-- 联系信息(_contacts)表映射 -->
+
+    <insert id="insert" parameterType="ContactPo" useGeneratedKeys="false">
+        REPLACE INTO _contacts (id, identity, full_name, email, phone, created_at)
+        VALUES (#{id}, #{identity}, #{fullName}, #{email}, #{phone}, #{createdAt})
+    </insert>
+</mapper>

@@ -1,0 +1,175 @@
+{
+  "name": "SaaS权限组CRUD开发任务",
+  "description": [
+    "实现权限组的领域逻辑，及在Boos.Api中实现权限组的CRUD接口。",
+    "权限组用于权限分组",
+    "多级权限组",
+    "[所属领域]=租户领域(tenant)",
+    "[所属上下文]=租户身份与访问控制(identity)"
+  ],
+  "prepares": [
+    {
+      "name": "了解项目",
+      "descriptions": [
+        "通过阅读 '\\doc\\agents\\base\\architecture.json' 这个文件来了解此项目。"
+      ]
+    },
+    {
+      "name": "了解项目",
+      "descriptions": [
+        "涉及到的数据库表已经为你定义好，放在 schema.sql 文件中，你可以仔细理解以下表的意图:",
+        "[表名]=`permission_groups`",
+        "[驼峰化表名]=PermissionGroup"
+      ]
+    }
+  ],
+  "roles": [
+    "像个专家一样去思考DDD CQRS 契约编程",
+    "在代码位置、开发范式、编程规范上无法决策，请参考已经写好的代码，已经修正",
+    "不要去修改已经写好的代码，除非你非常清楚你修改的内容",
+    "基础设施层实现请参考相同文件夹下的其它文件进行实现",
+    "领域层实现请参考相同文件夹下的其它文件进行实现, 如果没有类似的实现，请参考其它领域下的类似实现",
+    "应用层实现请参考相同文件夹下的其它文件进行实现, 如果没有类似的实现，请参考其它文件夹下(以领域名命名)的类似实现",
+    "文件夹或文件不存在,请创建,遵循已有的命名规范",
+    "请用中文进行交互"
+  ],
+  "tasks": [
+    {
+      "step": 1,
+      "name": "创建相关实体模型",
+      "descriptions": [
+        "在`[基础设施层]/[持久化对象]`文件夹下创建[持久化模型]",
+        "在`[所属领域]/[所属上下文]/event`文件夹下创建[创建领域事件]",
+        "在`[所属领域]/[所属上下文]/event`文件夹下创建[修改领域事件]",
+        "在`[所属领域]/[所属上下文]/event`文件夹下创建[禁用领域事件]",
+        "在`[所属领域]/[所属上下文]/event`文件夹下创建[激活领域事件]",
+        "在`[所属领域]/[所属上下文]/model`文件夹下创建[领域模型]",
+        "在`[应用层]/[所属领域]/query/dto`文件夹下创建[查询DTO]"
+      ],
+      "roles": [
+        "[持久化模型]命名规则: [驼峰化表名]Po ",
+        "[创建领域事件]命名规则: Create[驼峰化表名]Event ",
+        "[修改领域事件]命名规则: Modify[驼峰化表名]Event ",
+        "[禁用领域事件]命名规则: Destroy[驼峰化表名]Event ",
+        "[激活领域事件]命名规则: Activate[驼峰化表名]Event ",
+        "[领域模型]命名规则: [驼峰化表名] ",
+        "[查询DTO]命名规则: [驼峰化表名]Dto ",
+        "持久化模型属性请参考数据库表字段",
+        "领域事件属性请参考数据库表字段",
+        "领域模型属性请参考数据库表字段",
+        "查询DTO属性请参考数据库表字段",
+        "如果数据库表中存在`id`字段,[持久化模型]中对应的是`Long id`属性,表示主键ID; [领域模型]中对应的是`Aggregate id`属性,表示主键ID; [查询DTO]中对应的是`Long id`属性,表示主键ID",
+        "如果数据库表中字段是`enum`类型, [持久化模型]对应的是`String`类型; 请在`[所属领域]/[所属上下文]/type`文件夹下创建对应的枚举类型, 并在[领域模型]中使用该枚举类型作为属性类型。[查询DTO]中对应的是枚举类型",
+        "如果数据库表中存在`created_at`字段,[领域模型]中不需要此映射; [查询DTO]中对应的是`String createdAt`属性,表示创建时间, 格式为`yyyy-MM-dd HH:mm:ss`; ",
+        "如果数据库表中存在`updated_at`字段,[领域模型]中不需要此映射; [查询DTO]中对应的是`String updatedAt`属性,表示最后修改时间, 格式为`yyyy-MM-dd HH:mm:ss`",
+        "如果数据库表中存在`deleted_at`字段,[领域模型]中对应的是`boolean deleted`属性,表示是否被删除；[查询DTO]中对应的是`String deletedAt`属性,表示删除时间, 格式为`yyyy-MM-dd HH:mm:ss`",
+        "其它以`_at`结尾的时间字段,[领域模型]中对应的是`Long`类型属性; [查询DTO]中对应的是`String`类型属性,格式为`yyyy-MM-dd HH:mm:ss`",
+        "[领域模型]中create方法不接收任何参数，添加[创建领域事件]",
+        "[领域模型]中modify方法接收模型中private属性对应的字段作为参数，添加[修改领域事件]",
+        "[领域模型]中destroy方法不接收任何参数，添加[禁用领域事件]",
+        "[领域模型]中activate方法不接收任何参数，添加[激活领域事件]"
+      ]
+    },
+    {
+      "stpe": 2,
+      "name": "实现持久化",
+      "descriptions": [
+        "在`[基础设施层]/[持久化对象-表映射配置]`文件夹下创建mybatis [xml映射文件], 并完成代码",
+        "在`[基础设施层]/[持久化对象-表映射接口]`文件夹下创建mapstruct [Mapper映射接口], 并完成代码",
+        "在`[基础设施层]/[持久化对象-聚合根-DTO相互转换接口]`文件夹下创建mapstruct [对象转换接口], 并完成代码"
+      ],
+        "roles": [
+            "[xml映射文件]命名规则: [驼峰化表名]Mapper.xml ",
+            "[Mapper映射接口]命名规则: [驼峰化表名]Mapper ",
+            "[对象转换接口]命名规则: [驼峰化表名]Convert ",
+            "简单的sql语句（不涉及分页，查询条件不操作三个，返回*或返回字段不超过5个），都使用@Select, @Insert, @Update, @Delete等注解来实现，不要写在xml文件中。 其它在xml中实现",
+            "只包含toPo([领域模型]到[持久化模型])、updatePo(用[领域模型]更新[持久化模型])、toAggregate([持久化模型]到[领域模型])， toDto([持久化模型]到[查询DTO])、toOptionDto([持久化模型]到[查询DTO])方法",
+            "`[基础设施层]/[持久化对象-聚合根-DTO相互转换接口]`文件夹下下存在一个`IConverter.java`文件， 里面包含一些通用类型转换，可继承"
+        ]
+    },
+    {
+      "step": 3,
+      "name": "开发仓储接口和实现",
+      "descriptions": [
+        "在`[基础设施层]/[]`",
+        "在`[所属领域]/[所属上下文]/repo`文件夹下创建[聚合根仓储接口]",
+        "在`[应用层]/query/repo`文件夹下创建[查询仓储接口]",
+        "在`[基础设施层]/[持久化对象仓库实现]`文件夹下创建[聚合根仓储实现], 并完成代码",
+        "在`[基础设施层]/[查询对象仓库实现]`文件夹下创建[查询仓储实现], 并完成代码"
+      ],
+      "roles": [
+        "[聚合根仓储接口]命名规则: [驼峰化表名]Repository ",
+        "[查询仓储接口]命名规则: [驼峰化表名]QueryRepository ",
+        "[聚合根仓储实现]命名规则: [驼峰化表名]RepositoryImpl ",
+        "[查询仓储实现]命名规则: [驼峰化表名]QueryRepositoryImpl ",
+        "聚合根仓储接口继承自`com.mayanshe.scrmstd.shared.contract.DomainRepository<[领域模型], Long>`",
+        "查询仓储接口继承自`com.mayanshe.scrmstd.application.QueryRepository<[查询DTO], com.mayanshe.scrmstd.application.OptionDto, Long>`"
+      ]
+    },
+    {
+      "step": 4,
+      "name": "实现应用层的命令",
+        "descriptions": [
+            "在`[应用层]/[所属领域]/command`文件夹下创建[创建命令载体],并完成代码",
+            "在`[应用层]/[所属领域]/command`文件夹下创建[修改命令载体]，并完成代码",
+            "在`[应用层]/[所属领域]/command`文件夹下创建[禁用命令载体]，并文成代码",
+            "在`[应用层]/[所属领域]/command`文件夹下创建[激活命令载体]，并完成代码",
+            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[创建命令处理], 并完成代码",
+            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[修改命令实现]， 并完成代码",
+            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[禁用命令实现]， 并完成代码",
+            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[激活命令实现]， 并完成代码"
+        ],
+        "roles": [
+            "[创建命令载体]命名规则: Create[驼峰化表名]Command , 类型为Record, 实现Command<IDResponse>",
+            "[创建命令载体]属性请参考[领域模型]的private属性，去掉id属性",
+            "[修改命令载体]命名规则: Modify[驼峰化表名]Command , 类型为Record， 实现Command<Boolean>",
+            "[修改命令载体]属性请参考[领域模型]的private属性，包含id属性",
+            "[禁用命令载体]命名规则: Destroy[驼峰化表名]Command , 类型为Record, 实现Command<Boolean>",
+            "[激活命令载体]命名规则: Activate[驼峰化表名]Command , 类型为Record， Command<IDResponse>",
+            "[禁用命令载体]和属性[激活命令载体]只包含id属性",
+            "[创建命令实现]命名规则: Create[驼峰化表名]Handler ，实现CommandHandler<Create[驼峰化表名]Command, IDResponse>",
+            "[修改命令实现]命名规则: Modify[驼峰化表名]Handler ，实现CommandHandler<Modify[驼峰化表名]Command, Boolean>",
+            "[禁用命令实现]命名规则: Destroy[驼峰化表名]Handler ，实现CommandHandler<Modify[驼峰化表名]Command, Boolean>",
+            "[激活命令实现]命名规则: Activate[驼峰化表名]Handler ，实现CommandHandler<Activate[驼峰化表名]Command, Boolean>"
+        ]
+    },
+    {
+      "step": 5,
+        "name": "实现应用层的查询",
+        "descriptions": [
+            "在`[应用层]/[所属领域]/query`文件夹下创建[查询详情载体]",
+            "在`[应用层]/[所属领域]/query`文件夹下创建[查询Option列表载体]",
+            "在`[应用层]/[所属领域]/query`文件夹下创建[查询分页载体]"
+        ],
+        "roles": [
+            "[查询详情载体]命名规则: [驼峰化表名]DetailQuery , 类型为Record, 实现Query<[查询DTO]>",
+            "[查询详情载体]属性只包含id属性",
+            "[查询Option列表载体]命名规则:[驼峰化表名]OptionLQuery , 类型为Record, 实现Query<List<[OptionDto]>>",
+            "[查询分页载体]命名规则: [驼峰化表名]PaginationQuery , 类型为Record, 实现Query<Pagination<[查询DTO]>>",
+            "[查询分页载体]属性可以为空，包含page、pageSize属性"
+        ]
+    },
+    {
+        "step": 6,
+        "name": "实现Boos.Api中的接口",
+        "descriptions": [
+            "在`[Boss接口]/request`文件夹下创建[创建请求体], 并完成代码",
+            "在`[Boss接口]/request`文件夹下创建[修改请求体], 并完成代码",
+            "在`[Boss接口]/controller/`文件夹下创建[控制器类], 并完成代码"
+        ],
+        "roles": [
+            "[创建请求体]命名规则: Create[驼峰化表名]Request , 类型为Record",
+            "[创建请求体]属性请参考[领域模型]的private属性，去掉id属性",
+            "[控制器类]命名规则: [驼峰化表名]Controller ",
+            "控制器类创建方法命名规则: create[驼峰化表名] ",
+            "控制器类修改方法命名规则: modify[驼峰化表名] ",
+            "控制器类禁用方法命名规则: destroy[驼峰化表名], 路由为post /{id}/lock ",
+            "控制器类激活方法命名规则: activate[驼峰化表名], 路由为delete /{id}/lock ",
+            "路由参数id类型为String, 需要调用`com.mayanshe.scrmstd.shared.contract.IdGenerator.fromBase62方法解析Long类型才能传递给Command`",
+            "命令均采用Resource(name = \"simpleCommandBus\")的命令bus来发送",
+            "查询均采用Resource(name = \"simpleQueryBus\")的查询bus来发送",
+            "只有创建请求返回IDResponse类型， 其它均void类型"
+        ]
+    }
+  ]
+}

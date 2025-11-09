@@ -1,0 +1,12 @@
+app:
+  name: Scrm STD Saas Api
+  version: 1.0.0
+  author: 张西海[mail@sniu.com]
+
+spring:
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: WARN

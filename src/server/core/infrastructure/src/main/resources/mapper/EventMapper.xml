@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.EventMapper">
+    <!-- 事件(_events)表映射 -->
+
+    <insert id="insert" parameterType="EventPo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO _events (ref_id, event_type, event_id, event_data, occurred_at, state, created_by, created_at)
+        VALUES (#{refId}, #{eventType}, #{eventId}, #{eventData}, #{occurredAt}, #{state},  #{createdBy}, #{createdAt})
+    </insert>
+
+    <update id="confirm" parameterType="EventPo">
+        UPDATE _events
+        SET state      = 1,
+            version    = version + 1,
+            updated_at = FLOOR(UNIX_TIMESTAMP(NOW(3)) * 1000)
+        WHERE id = #{id}
+          AND state = 0 AND version = #{version}
+    </update>
+
+    <update id="destroyById" parameterType="Long">
+        UPDATE _events
+        SET state      = 2,
+            version    = version + 1,
+            updated_at = FLOOR(UNIX_TIMESTAMP(NOW(3)) * 1000)
+        WHERE id = #{id}
+          AND state = 0
+    </update>
+
+    <select id="findById" parameterType="Long" resultType="EventPo">
+        SELECT *
+        FROM _events
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByEventId" parameterType="String" resultType="EventPo">
+        SELECT *
+        FROM _events
+        WHERE event_id = #{eventId}
+    </select>
+
+</mapper>

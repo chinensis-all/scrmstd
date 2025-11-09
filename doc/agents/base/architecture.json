@@ -1,0 +1,233 @@
+{
+    "name": "架构",
+    "descriptions": [
+        "这个文件描述的是当前项目的架构及结构，可以帮助AI编程工具更好理解当前项目及已经存在的代码结构和资源。"
+    ],
+    "tech-stacks": {
+        "name": "技术栈",
+        "descriptions": [
+            "技术栈、编程范式。"
+        ],
+        "tacks": [
+            {
+                "name": "jdk",
+                "version": "17",
+                "descriptions": []
+            },
+            {
+                "name": "springboot",
+                "version": "3.3.0",
+                "descriptions": []
+            },
+            {
+                "name": "mysql",
+                "version": "^8.0",
+                "descriptions": []
+            },
+            {
+                "name": "redis",
+                "version": "^4.0",
+                "descriptions": []
+            },
+            {
+                "name": "mybatis",
+                "version": "3.0.3",
+                "descriptions": [
+                    "后端项目中仅引入了Myatiis, 没有引入Mybatis-plus，所以项目不应该使用Mybatis-plus。"
+                ]
+            },
+            {
+                "name": "lombok",
+                "version": "1.18.34",
+                "descriptions": [
+                    "能使用record的定义，尽量不使用lombok"
+                ]
+            },
+            {
+                "name": "jackson",
+                "version": "2.17.2",
+                "descriptions": []
+            },
+            {
+                "name": "hutool",
+                "version": "hutool",
+                "descriptions": []
+            },
+            {
+                "sa-token": {
+                    "name": "sa-token",
+                    "version": "1.44.0",
+                    "descriptions": []
+                }
+            }
+        ],
+        "paradigms" :[
+            {
+                "name": "DDD",
+                "descriptions": [
+                    "领域驱动设计",
+                    "基础设施层、领域层、应用层、共享核心、Interface层",
+                    "领域层每个领域都建立了单独的Spring Boot项目，Generic作为通用领域，用于处理诸如位置信息、事件等通用功能",
+                    "领域层单个项目中以上下文划分文件夹，每个上下文中包含的文件夹有：model、event、service、repo、type、valueobj",
+                    "领域层直接依赖共享核心, 不依赖任何其他项目",
+                    "基础设施层直接依赖应用层、领域层、共享核心，不依赖任何其他项目",
+                    "应用层直接依赖领域层、共享核心，不依赖任何其他项目",
+                    "Interface层有多个项目",
+                    "Interface层各项目依赖应用层、领域层基础设施层、共享核心，不依赖任何其他项目"
+                ]
+            },
+            {
+                "name": "CQRS",
+                "descriptions": [
+                    "命令与查询分离",
+                    "CQRS在应用层实现",
+                    "CommandBus用于处理命令，QueryBus用于处理查询",
+                    "应用层以领域作为文件夹名，跨领域的应用放在cross文件夹下"
+                ]
+            }
+        ]
+    },
+    "files": {
+        "name": "文件",
+        "descriptions": [
+            "这里仅列出较为重要的文件和文件夹"
+        ],
+        "list" : [
+            {
+                "path": "/doc/data/schema.sql",
+                "descriptions": [
+                    "数据库DDL脚本",
+                    "包含了当前项目的所有Mysql数据库表结构定义"
+                ]
+            },
+            {
+                "path": "/src/server/interface/boss.api",
+                "descriptions": [
+                    "SCRM [Boss接口]接口路径"
+                ]
+            },
+            {
+                "path": "/src/server/interface/saas.api",
+                "descriptions": [
+                    "SCRM Saas接口项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/interface/schedule.task",
+                "descriptions": [
+                    "SCRM [调度任务项目]路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/application",
+                "descriptions": [
+                    "SCRM [应用层]项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/infrastructure",
+                "descriptions": [
+                    "SCRM [基础设施层]项目路径"
+                ],
+                "folders": [
+                    {
+                        "path": "/src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/cache/",
+                        "descriptions": [
+                            "基础设施 缓存定义 文件夹"
+                        ]
+                    },
+                    {
+                        "path": "/src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/config/",
+                        "descriptions": [
+                            "基础设施 通用配置 文件夹"
+                        ]
+                    },
+                    {
+                        "path": "/src/server/core/infrastructure/src/main/resources/mapper/",
+                        "descriptions": [
+                            "基础设施 [持久化对象-表映射配置]文件夹"
+                        ]
+                    },
+                    {
+                        "path": "src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/persistence/mapper/",
+                        "descriptions": [
+                            "基础设施 [持久化对象-表映射接口]文件夹"
+                        ]
+                    },
+                    {
+                        "path": "src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/persistence/po/",
+                        "descriptions": [
+                            "[基础设施][持久化对象]文件夹"
+                        ]
+                    },
+                    {
+                        "path": "src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/persistence/repo/",
+                        "descriptions": [
+                            "基础设施 [持久化对象仓库实现]文件夹"
+                        ]
+                    },
+                    {
+                        "path": "src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/external/adapter/",
+                        "descriptions": [
+                            "基础设施 外部适配器 文件夹"
+                        ]
+                    },
+                    {
+                        "path": "/src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/external/converter/",
+                        "descriptions": [
+                            "基础设施 [持久化对象-聚合根-DTO相互转换接口]文件夹"
+                        ]
+                    },
+                    {
+                        "path": "src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/service/",
+                        "descriptions": [
+                            "领域服务的实现文件夹，按领域划分子文件夹"
+                        ]
+                    }
+                ]
+            },
+            {
+                "path": "/src/server/core/shared",
+                "descriptions": [
+                    "SCRM 共享核心项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain",
+                "descriptions": [
+                    "SCRM 领域层文件 夹路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain/generic",
+                "descriptions": [
+                    "SCRM 通用领域 项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain/boss",
+                "descriptions": [
+                    "SCRM boss管理领域 项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain/tenant",
+                "descriptions": [
+                    "SCRM 租户领域 项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain/file",
+                "descriptions": [
+                    "SCRM 文件领域 项目路径"
+                ]
+            },
+            {
+                "path": "/src/server/core/domain/message",
+                "descriptions": [
+                    "SCRM 消息领域 项目路径"
+                ]
+            }
+        ]
+    }
+}

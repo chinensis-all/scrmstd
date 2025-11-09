@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.RegionMapper">
+    <!-- 中国行政区划(regions)表映射 -->
+
+    <update id="update" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.RegionPo">
+        UPDATE regions
+        SET parent_id        = #{parentId},
+            region_level     = #{regionLevel},
+            postal_code      = #{postalCode},
+            area_code        = #{areaCode},
+            region_name      = #{regionName},
+            name_pinyin      = #{namePinyin},
+            short_name       = #{shortName},
+            merge_name       = #{mergeName},
+            latitude         = #{latitude},
+            longitude        = #{longitude}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findByIds" parameterType="List" resultType="com.mayanshe.scrmstd.application.OptionDto">
+        SELECT id, region_name AS name
+        FROM regions
+        WHERE id IN
+        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="regionCode != null">
+                AND postal_code = #{postalCcode}
+            </if>
+            <if test="area_code != null">
+                AND area_code = #{areaCode}
+            </if>
+            <if test="regionName != null">
+                AND (region_name LIKE CONCAT('%', #{regionName}, '%') OR name_pinyin LIKE CONCAT('%', #{regionName}, '%') OR name_pinyin_abbr LIKE CONCAT('%', #{regionName}, '%'))
+            </if>
+            <if test="regionIds != null and regionIds.size() > 0">
+                AND id IN
+                <foreach item="id" index="index" collection="regionIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="Map">
+        SELECT COUNT(1)
+        FROM regions
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="com.mayanshe.scrmstd.infrastructure.persistence.po.RegionPo">
+        SELECT *
+        FROM regions
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.AdminMapper">
+    <!-- 租户管理员(admins)表映射 -->
+
+    <insert id="insert" parameterType="AdminPo" useGeneratedKeys="false">
+        INSERT INTO admins (id, tenant_id, username, password, full_name, email, phone, avatar,
+                            created_at)
+        VALUES (#{id}, #{tenantId}, #{username}, #{password}, #{fullName}, #{email}, #{phone},
+                #{avatar}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="AdminPo">
+        UPDATE admins
+        SET
+            <if test="password != null">
+                password      = #{password},
+            </if>
+            username      = #{username},
+            full_name     = #{fullName},
+            email         = #{email},
+            phone         = #{phone},
+            avatar        = #{avatar},
+            last_login_at = #{lastLoginAt},
+            last_login_ip = #{lastLoginIp},
+            updated_at    = #{updatedAt},
+            deleted_at    = #{deletedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        UPDATE admins
+        SET deleted_at = UNIX_TIMESTAMP(now(3)) * 1000
+        WHERE id = #{id}
+          AND deleted_at = 0
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="AdminPo">
+        SELECT *
+        FROM admins
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="username != null">
+                AND username = #{username}
+            </if>
+            <if test="fullName != null">
+                AND full_name = #{fullName}
+            </if>
+            <if test="email != null">
+                AND email = #{email}
+            </if>
+            <if test="phone != null">
+                AND phone = #{phone}
+            </if>
+            <if test="keywords != null">
+                AND (username LIKE CONCAT('%', #{keywords}, '%')
+                     OR full_name LIKE CONCAT('%', #{keywords}, '%')
+                     OR email LIKE CONCAT('%', #{keywords}, '%')
+                     OR phone LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <select id="findIdByCondition" parameterType="Map" resultType="Long">
+        SELECT id
+        FROM admins
+        <include refid="condition"/>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
+</mapper>

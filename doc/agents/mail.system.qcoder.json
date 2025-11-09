@@ -1,0 +1,117 @@
+{
+    "name": "邮件系统开发任务",
+    "descriptions": [
+        "邮件系统是scrm重要组成部分",
+        "通过邮件系统向系统用户、租户、和租户的客户发送邮件",
+        "邮件种类包括验证码、通知、营销、事务等等",
+        "可以发送，可以操作，可以发送附件",
+        "可以直接给指定用户发送指定模板邮件",
+        "可以建立邮件发送任务，批量给用户发送邮件",
+        "可以定时发送，也可以取消定时发送"
+    ],
+    "prepares": [
+        {
+            "name": "了解项目",
+            "descriptions": [
+                "通过阅读 '\\doc\\agents\\base\\architecture.json' 这个文件来了解此项目。"
+            ]
+        },
+        {
+            "name": "了解项目",
+            "descriptions": [
+                "涉及到的数据库表已经为你定义好，放在 schema.sql 文件中，你可以仔细理解以下表的意图:",
+                "`_contacts`",
+                "`email_templates`",
+                "`email_tasks`",
+                "`email_logs`"
+            ]
+        }
+    ],
+    "roles": [
+        "像个专家一样去思考DDD CQRS 契约编程",
+        "在代码位置、开发范式、编程规范上无法决策，请参考已经写好的代码，已经修正",
+        "不要去修改已经写好的代码，除非你非常清楚你修改的内容"
+    ],
+    "tasks": [
+        {
+            "name": "开发邮件发送服务基础设施",
+            "descriptions": [
+                "接口定义在共享核心项目中",
+                "实现在基础设施项目mail中，实现为Component"
+            ],
+            "roles": [
+                "用spring boot自带的邮件发送包开发即可"
+            ]
+        },
+        {
+            "name": "开发邮件模版的Crud Restful接口",
+            "descriptions": [
+                "任何一封邮件都需要一个模版",
+                "在boss.api项目中为系统用户实现操作邮件模版的CRUD Restful接口",
+                "在sass.api中为租户和租户客户实现操作邮件模版的CRUD Restful接口"
+            ],
+            "roles": [
+                "应用层在com.mayanshe.scrmstd.application.message软件包中实现",
+                "领域层在message领域项目的template上下文(文件夹中)实现",
+                "接口 应用 基础设施 都可以参考Boss的BossAdmin实现",
+                "接口验证不用实现，后续我会进行实现"
+            ]
+        },
+        {
+            "name": "开发邮件渲染服务",
+            "descriptions": [
+                "这个服务只涉及领域层和基础设施层，不涉及应用层和interface",
+                "在message领域的template上下文(文件夹中)实现",
+                "接收一个模板ID, 一个Map<String, Object>参数组",
+                "返回渲染后的邮件内容"
+            ],
+            "roles": [
+                "优化渲染的性能，用最优的字符串替换算法"
+            ]
+        },
+        {
+            "name": "开发邮件发送任务服务",
+            "descriptions": [
+                "这个服务只涉及领域层和基础设施层，不涉及应用层和interface",
+                "在message领域的task上下文(文件夹中)实现",
+                "接收tenant_id, task_id",
+                "接收一个邮件对象，包含recipient， cc， subject， body， content， attachments"
+            ],
+            "roles": [
+                "暂时不考虑定时邮件的发送实现"
+            ]
+        }, 
+        {
+            "name": "开发邮件发送日志记录服务",
+            "descriptions": [
+                "这个服务只涉及领域层和基础设施层，不涉及应用层和interface",
+                "在message领域的log上下文(文件夹中)实现",
+                "响应邮件发送成功或失败事件， 记录邮件发送日志"
+            ]
+        },
+        {
+            "name": "开发邮件发送日志分页查询接口",
+            "descriptions": [
+                "为boss.api和sass.api提供邮件发送日志分页查询接口"
+            ],
+            "roles": [
+                "应用层在com.mayanshe.scrmstd.application.message软件包中实现",
+                "领域层在message领域项目的log上下文(文件夹中)实现",
+                "接口验证不用实现，后续我会实现"
+            ]
+        },
+        {
+            "name": "开发手动发送",
+            "descriptions": [
+                "为boss.api和sass.api提供手动发送接口"
+            ]
+        },
+        {
+            "name": "开发邮件重发接口",
+            "descriptions": [
+                "为boss.api和sass.api提供邮件手动点击重发接口",
+                "接口接收一个邮件发送日志ID，返回邮件发送结果"
+            ]
+        }
+    ]
+}
