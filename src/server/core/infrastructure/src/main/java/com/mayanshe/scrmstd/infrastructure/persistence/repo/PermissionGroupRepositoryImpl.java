@@ -17,7 +17,7 @@
  */
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
-import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConvert;
+import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionGroupPo;
 import com.mayanshe.scrmstd.shared.annotation.SaveDomainEvents;
@@ -31,6 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PermissionGroupRepositoryImpl: 权限组仓储实现
+ */
 @Repository
 public class PermissionGroupRepositoryImpl implements PermissionGroupRepository {
     private final PermissionGroupMapper mapper;
@@ -42,7 +45,7 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
     @Override
     public Optional<PermissionGroup> load(Long id) {
         PermissionGroupPo po = getPo(id);
-        return Optional.ofNullable(po == null ? null : PermissionGroupConvert.INSTANCE.toAggregate(po));
+        return Optional.ofNullable(po == null ? null : PermissionGroupConverter.INSTANCE.toAggregate(po));
     }
 
     @Override
@@ -56,9 +59,9 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
             return;
         }
 
-        verifyGroupNameConflict(aggregate);
+        verifyConflict(aggregate);
 
-        PermissionGroupPo po = PermissionGroupConvert.INSTANCE.toPo(aggregate);
+        PermissionGroupPo po = PermissionGroupConverter.INSTANCE.toPo(aggregate);
 
         if (aggregate.getId().newed()) {
             if (mapper.insert(po) <= 0) {
@@ -72,10 +75,22 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
         }
     }
 
-    private void verifyGroupNameConflict(PermissionGroup aggregate) {
+    private void verifyConflict(PermissionGroup aggregate) {
         Long groupNameExistId = mapper.findIdByCondition(Map.of("groupName", aggregate.getGroupName()));
         if (groupNameExistId != null && !groupNameExistId.equals(aggregate.getId().id())) {
             throw new RequestConflictException("权限组名称已存在，名称：" + aggregate.getGroupName());
+        }
+
+        Long displayNameExistId = mapper.findIdByCondition(Map.of("displayName", aggregate.getDisplayName()));
+        if (displayNameExistId != null && !displayNameExistId.equals(aggregate.getId().id())) {
+            throw new RequestConflictException("权限组显示名称已存在，显示名称：" + aggregate.getDisplayName());
+        }
+
+        if (aggregate.getParentId() > 0) {
+            Long parentExistId = mapper.findIdByCondition(Map.of("id", aggregate.getParentId()));
+            if (parentExistId == null) {
+                throw new RequestConflictException("父权限组不存在，父权限组ID：" + aggregate.getParentId());
+            }
         }
     }
 

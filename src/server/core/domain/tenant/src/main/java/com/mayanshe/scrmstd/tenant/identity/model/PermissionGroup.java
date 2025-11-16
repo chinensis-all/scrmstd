@@ -18,6 +18,7 @@
 package com.mayanshe.scrmstd.tenant.identity.model;
 
 import com.mayanshe.scrmstd.shared.base.Aggregate;
+import com.mayanshe.scrmstd.shared.exception.BadRequestException;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
 import com.mayanshe.scrmstd.tenant.identity.event.ActivatePermissionGroupEvent;
 import com.mayanshe.scrmstd.tenant.identity.event.CreatePermissionGroupEvent;
@@ -25,6 +26,9 @@ import com.mayanshe.scrmstd.tenant.identity.event.DestroyPermissionGroupEvent;
 import com.mayanshe.scrmstd.tenant.identity.event.ModifyPermissionGroupEvent;
 import lombok.*;
 
+/**
+ * PermissionGroup: 权限组聚合根
+ */
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -33,6 +37,8 @@ import lombok.*;
 @AllArgsConstructor
 public class PermissionGroup extends Aggregate {
     private AggregateId id;
+
+    private Long parentId;
 
     private String groupName;
 
@@ -43,6 +49,9 @@ public class PermissionGroup extends Aggregate {
     @Builder.Default
     private Boolean deleted = false;
 
+    /**
+     * 创建权限组
+     */
     public void create() {
         this.setDeleted(false);
 
@@ -56,7 +65,17 @@ public class PermissionGroup extends Aggregate {
         this.registerEvent(event);
     }
 
-    public void modify() {
+    /**
+     * 修改权限组
+     * @param parentId   上级权限组ID
+     * @param groupName  权限组名称
+     * @param displayName 显示名称
+     * @param description 描述
+     */
+    public void modify(Long parentId, String groupName, String displayName, String description) {
+        this.setGroupName(groupName);
+        this.setDisplayName(displayName);
+        this.setDescription(description);
         this.setDeleted(false);
 
         ModifyPermissionGroupEvent event = ModifyPermissionGroupEvent.builder()
@@ -69,7 +88,14 @@ public class PermissionGroup extends Aggregate {
         this.registerEvent(event);
     }
 
+    /**
+     * 销毁权限组
+     */
     public void destroy() {
+        if (this.getDeleted()) {
+            throw new BadRequestException("权限组已被禁用，无法重复禁用，权限组ID：" + this.getId());
+        }
+
         this.setDeleted(true);
 
         DestroyPermissionGroupEvent event = DestroyPermissionGroupEvent.builder()
@@ -79,7 +105,14 @@ public class PermissionGroup extends Aggregate {
         this.registerEvent(event);
     }
 
+    /**
+     * 激活权限组
+     */
     public void activate() {
+        if (!this.getDeleted()) {
+            throw new BadRequestException("权限组未被禁用，无法激活，权限组ID：" + this.getId());
+        }
+
         this.setDeleted(false);
 
         ActivatePermissionGroupEvent event = ActivatePermissionGroupEvent.builder()

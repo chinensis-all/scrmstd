@@ -33,15 +33,15 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.Map;
 
+/**
+ * PermissionGroupMapper: 权限组Mapper接口
+ */
 @Mapper
 public interface PermissionGroupMapper extends PaginateMapper<PermissionGroupPo> {
-    @Insert("INSERT INTO permission_groups (id, group_name, display_name, description, created_at) VALUES (#{id}, #{groupName}, #{displayName}, #{description}, #{createdAt})")
     long insert(PermissionGroupPo po);
 
-    @Update("UPDATE permission_groups SET group_name = #{groupName}, display_name = #{displayName}, description = #{description}, updated_at = #{updatedAt}, deleted_at = #{deletedAt} WHERE id = #{id}")
     long update(PermissionGroupPo po);
 
-    @Update("UPDATE permission_groups SET deleted_at = UNIX_TIMESTAMP(now(3)) * 1000 WHERE id = #{id} AND deleted_at = 0")
     Long delete(Long id);
 
     @Select("SELECT * FROM permission_groups WHERE id = #{id} LIMIT 1")

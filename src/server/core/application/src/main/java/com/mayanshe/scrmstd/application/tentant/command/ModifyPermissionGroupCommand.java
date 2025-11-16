@@ -18,10 +18,19 @@ package com.mayanshe.scrmstd.application.tentant.command;
 
 import com.mayanshe.scrmstd.application.Command;
 
+/**
+ * ModifyPermissionGroupCommand: 修改权限组命令
+ *
+ * @param id           权限组ID
+ * @param parentId     上级权限组ID
+ * @param groupName    权限组名称
+ * @param displayName  权限组显示名称
+ * @param description  权限组描述
+ */
 public record ModifyPermissionGroupCommand(
         Long id,
+        Long parentId,
         String groupName,
         String displayName,
         String description
-) implements Command<Boolean> {
-}
+) implements Command<Boolean> {}

@@ -26,10 +26,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper
-public interface PermissionGroupConvert extends BaseConverter {
-    PermissionGroupConvert INSTANCE = Mappers.getMapper(PermissionGroupConvert.class);
+@Mapper(componentModel = "spring")
+@Component
+public interface PermissionGroupConverter extends BaseConverter {
+    PermissionGroupConverter INSTANCE = Mappers.getMapper(PermissionGroupConverter.class);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),

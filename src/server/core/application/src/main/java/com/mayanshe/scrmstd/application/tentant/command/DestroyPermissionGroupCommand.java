@@ -18,7 +18,11 @@ package com.mayanshe.scrmstd.application.tentant.command;
 
 import com.mayanshe.scrmstd.application.Command;
 
+/**
+ * 删除权限组命令
+ *
+ * @param id 权限组ID
+ */
 public record DestroyPermissionGroupCommand(
         Long id
-) implements Command<Boolean> {
-}
+) implements Command<Boolean> {}

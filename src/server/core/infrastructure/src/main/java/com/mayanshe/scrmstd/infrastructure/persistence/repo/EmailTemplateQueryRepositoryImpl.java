@@ -17,15 +17,12 @@
  */
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
-import cn.hutool.json.JSONUtil;
 import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.message.query.dto.EmailTemplateDto;
 import com.mayanshe.scrmstd.application.message.query.repo.EmailTemplateQueryRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.EmailTemplateConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.EmailTemplateMapper;
-import com.mayanshe.scrmstd.infrastructure.persistence.po.EmailTemplatePo;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import org.springframework.stereotype.Repository;
 

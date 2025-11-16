@@ -16,12 +16,23 @@
  */
 package com.mayanshe.scrmstd.application.tentant.query;
 
-import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.shared.model.Pagination;
 
-import java.util.List;
-
-public record PermissionGroupOptionLQuery(
-        String keyword
-) implements Query<List<OptionDto>> {
+/**
+ * PermissionGroupPaginationQuery: 查询权限组分页列表
+ *
+ * @param parentId 上级权限组ID
+ * @param keywords  关键字
+ * @param page     页码
+ * @param pageSize 每页大小
+ */
+public record PermissionGroupPaginationQuery(
+        Long parentId,
+        String keywords,
+        Boolean deleted,
+        Long page,
+        Long pageSize
+) implements Query<Pagination<PermissionGroupDto>> {
 }

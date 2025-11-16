@@ -15,35 +15,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command.impl;
+package com.mayanshe.scrmstd.application.tentant.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.tentant.command.ModifyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tentant.command.ActivatePermissionGroupCommand;
 import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
 import com.mayanshe.scrmstd.tenant.identity.repo.PermissionGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * ActivatePermissionGroupHandler: 激活权限组命令处理器
+ */
 @Service
-public class ModifyPermissionGroupHandler implements CommandHandler<ModifyPermissionGroupCommand, Boolean> {
+public class ActivatePermissionGroupHandler implements CommandHandler<ActivatePermissionGroupCommand, Boolean> {
     private final DomainEventPublisher publisher;
     private final PermissionGroupRepository repository;
 
-    public ModifyPermissionGroupHandler(DomainEventPublisher publisher, PermissionGroupRepository repository) {
+    public ActivatePermissionGroupHandler(DomainEventPublisher publisher, PermissionGroupRepository repository) {
         this.publisher = publisher;
         this.repository = repository;
     }
 
     @Override
     @Transactional
-    public Boolean handle(ModifyPermissionGroupCommand command) {
+    public Boolean handle(ActivatePermissionGroupCommand command) {
         PermissionGroup aggregate = repository.load(command.id()).orElseThrow(() -> new IllegalArgumentException("权限组不存在, ID=" + command.id()));
-
-        aggregate.setGroupName(command.groupName());
-        aggregate.setDisplayName(command.displayName());
-        aggregate.setDescription(command.description());
-        aggregate.modify();
+        aggregate.activate();
 
         repository.save(aggregate);
         publisher.confirm(aggregate.getEvents());

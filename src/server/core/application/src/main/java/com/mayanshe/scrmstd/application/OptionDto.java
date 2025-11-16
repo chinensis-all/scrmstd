@@ -17,8 +17,14 @@
  */
 package com.mayanshe.scrmstd.application;
 
+import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+
 /**
  * 选项 DTO
  */
 public record OptionDto(String id, String name) {
+    @Override
+    public String id() {
+        return IdGenerator.toBase62(Long.parseLong(id));
+    }
 }

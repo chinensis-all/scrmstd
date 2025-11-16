@@ -19,6 +19,9 @@ package com.mayanshe.scrmstd.infrastructure.persistence.po;
 
 import lombok.*;
 
+/**
+ * PermissionGroupPo: 权限组持久化对象
+ */
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -26,6 +29,8 @@ import lombok.*;
 @AllArgsConstructor
 public class PermissionGroupPo {
     private Long id;              // 主键ID
+
+    private Long parentId;        // 父权限组ID
 
     private String groupName;     // 权限组名称
 

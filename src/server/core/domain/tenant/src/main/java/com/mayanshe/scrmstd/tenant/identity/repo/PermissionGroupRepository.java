@@ -19,6 +19,8 @@ package com.mayanshe.scrmstd.tenant.identity.repo;
 import com.mayanshe.scrmstd.shared.contract.DomainRepository;
 import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
 
+/**
+ * PermissionGroupRepository: 权限组仓储接口
+ */
 public interface PermissionGroupRepository extends DomainRepository<PermissionGroup, Long> {
-
 }

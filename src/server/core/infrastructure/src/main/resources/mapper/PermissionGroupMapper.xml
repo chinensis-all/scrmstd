@@ -3,10 +3,36 @@
 <mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper">
     <!-- 权限组(permission_groups)表映射 -->
 
+    <insert id="insert" parameterType="PermissionGroupPo" useGeneratedKeys="false">
+        INSERT INTO permission_groups (id, parent_id, group_name, display_name, description, created_at)
+        VALUES (#{id}, #{parentId}, #{groupName}, #{displayName}, #{description}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="PermissionGroupPo">
+        UPDATE permission_groups
+        SET parent_id    = #{parentId},
+            group_name   = #{groupName},
+            display_name = #{displayName},
+            description  = #{description},
+            updated_at   = #{updatedAt},
+            deleted_at   = #{deletedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete" parameterType="Long">
+        UPDATE permission_groups
+        SET deleted_at = UNIX_TIMESTAMP(NOW(3)) * 1000
+        WHERE id = #{id}
+          and deleted_at = 0
+    </update>
+
     <sql id="condition">
         <where>
             <if test="id != null">
                 AND id = #{id}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
             </if>
             <if test="groupName != null">
                 AND group_name = #{groupName}
@@ -16,7 +42,13 @@
             </if>
             <if test="keywords != null">
                 AND (group_name LIKE CONCAT('%', #{keywords}, '%')
-                     OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+                OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="deleted != null and deleted == true">
+                AND deleted_at > 0
+            </if>
+            <if test="deleted != null and deleted == false">
+                AND deleted_at = 0
             </if>
         </where>
     </sql>
@@ -40,5 +72,29 @@
         SELECT count(*)
         FROM permission_groups
         <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="PermissionGroupPo">
+        SELECT id, parent_id, group_name, display_name, description, created_at, updated_at, deleted_at
+        FROM permission_groups
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
     </select>
 </mapper>

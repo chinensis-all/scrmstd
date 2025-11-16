@@ -18,9 +18,11 @@
 package com.mayanshe.scrmstd.application.tentant.query.dto;
 
 import cn.hutool.core.date.DateUtil;
+import com.mayanshe.scrmstd.shared.contract.IdGenerator;
 
 public record PermissionGroupDto(
         String id,
+        String parentId,
         String groupName,
         String displayName,
         String description,
@@ -29,17 +31,27 @@ public record PermissionGroupDto(
         String deletedAt
 ) {
     @Override
+    public String id() {
+        return IdGenerator.toBase62(Long.parseLong(id));
+    }
+
+    @Override
+    public String parentId() {
+        return IdGenerator.toBase62(Long.parseLong(parentId));
+    }
+
+    @Override
     public String createdAt() {
-        return String.format(String.format(createdAt == null || createdAt.isBlank() ? "" : DateUtil.format(DateUtil.date(Long.parseLong(createdAt)), "yyyy-MM-dd HH:mm:ss")));
+        return createdAt == null || createdAt.isBlank() || createdAt.equals("0") ? "" : String.format(String.format(DateUtil.format(DateUtil.date(Long.parseLong(createdAt)), "yyyy-MM-dd HH:mm:ss")));
     }
 
     @Override
     public String updatedAt() {
-        return String.format(String.format(updatedAt == null || updatedAt.isBlank() ? "" : DateUtil.format(DateUtil.date(Long.parseLong(updatedAt)), "yyyy-MM-dd HH:mm:ss")));
+        return updatedAt == null || updatedAt.isBlank() || updatedAt.equals("0") ? "" : String.format(String.format(DateUtil.format(DateUtil.date(Long.parseLong(updatedAt)), "yyyy-MM-dd HH:mm:ss")));
     }
 
     @Override
     public String deletedAt() {
-        return String.format(String.format(deletedAt == null || deletedAt.isBlank() ? "" : DateUtil.format(DateUtil.date(Long.parseLong(deletedAt)), "yyyy-MM-dd HH:mm:ss")));
+        return deletedAt == null || deletedAt.isBlank() || deletedAt.equals("0") ? "" : String.format(String.format(DateUtil.format(DateUtil.date(Long.parseLong(deletedAt)), "yyyy-MM-dd HH:mm:ss")));
     }
 }

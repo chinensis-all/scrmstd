@@ -20,7 +20,7 @@ package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
 import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
-import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConvert;
+import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
 import com.mayanshe.scrmstd.shared.model.Pagination;
@@ -30,12 +30,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * PermissionGroupQueryRepositoryImpl: 权限组查询仓储实现
+ */
 @Repository
 public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryRepository {
     private final PermissionGroupMapper mapper;
-    private final PermissionGroupConvert converter;
+    private final PermissionGroupConverter converter;
 
-    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper, PermissionGroupConvert converter) {
+    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper, PermissionGroupConverter converter) {
         this.mapper = mapper;
         this.converter = converter;
     }
@@ -53,8 +56,12 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
 
     @Override
     public List<OptionDto> search(Map<String, Object> criteria, long limit) {
-        // TODO: search method is not implemented yet.
-        return null;
+        if (!criteria.containsKey("limit")) {
+            criteria.put("limit", limit);
+        }
+        return mapper.search(criteria).stream()
+                .map(po -> new OptionDto(String.valueOf(po.getId()), po.getGroupName()))
+                .toList();
     }
 
     @Override

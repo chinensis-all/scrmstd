@@ -22,6 +22,9 @@ import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * ModifyPermissionGroupEvent: 修改权限组领域事件
+ */
 @Getter
 @Setter
 @NoArgsConstructor

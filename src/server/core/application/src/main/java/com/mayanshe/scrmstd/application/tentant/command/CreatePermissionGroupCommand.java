@@ -19,9 +19,17 @@ package com.mayanshe.scrmstd.application.tentant.command;
 import com.mayanshe.scrmstd.application.Command;
 import com.mayanshe.scrmstd.shared.model.IDResponse;
 
+/**
+ * CreatePermissionGroupCommand: 创建权限组命令
+ *
+ * @param parentId     上级权限组ID
+ * @param groupName    权限组名称
+ * @param displayName  权限组显示名称
+ * @param description  权限组描述
+ */
 public record CreatePermissionGroupCommand(
+        Long parentId,
         String groupName,
         String displayName,
         String description
-) implements Command<IDResponse> {
-}
+) implements Command<Long> {}

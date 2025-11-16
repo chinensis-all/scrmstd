@@ -15,36 +15,50 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command.impl;
+package com.mayanshe.scrmstd.application.tentant.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.tentant.command.DestroyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tentant.command.CreatePermissionGroupCommand;
+import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
+import com.mayanshe.scrmstd.shared.model.IDResponse;
 import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
 import com.mayanshe.scrmstd.tenant.identity.repo.PermissionGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * CreatePermissionGroupHandler: 创建权限组命令处理器
+ */
 @Service
-public class DestroyPermissionGroupHandler implements CommandHandler<DestroyPermissionGroupCommand, Boolean> {
+public class CreatePermissionGroupHandler implements CommandHandler<CreatePermissionGroupCommand, Long> {
+    private final IdGenerator idGenerator;
     private final DomainEventPublisher publisher;
     private final PermissionGroupRepository repository;
 
-    public DestroyPermissionGroupHandler(DomainEventPublisher publisher, PermissionGroupRepository repository) {
+    public CreatePermissionGroupHandler(IdGenerator idGenerator, DomainEventPublisher publisher, PermissionGroupRepository repository) {
+        this.idGenerator = idGenerator;
         this.publisher = publisher;
         this.repository = repository;
     }
 
     @Override
     @Transactional
-    public Boolean handle(DestroyPermissionGroupCommand command) {
-        PermissionGroup aggregate = repository.load(command.id()).orElseThrow(() -> new IllegalArgumentException("权限组不存在, ID=" + command.id()));
+    public Long handle(CreatePermissionGroupCommand command) {
+        long id = idGenerator.nextId();
 
-        aggregate.destroy();
+        PermissionGroup aggregate = new PermissionGroup();
+        aggregate.setId(new AggregateId(id, true));
+        aggregate.setParentId(command.parentId());
+        aggregate.setGroupName(command.groupName());
+        aggregate.setDisplayName(command.displayName());
+        aggregate.setDescription(command.description());
+        aggregate.create();
 
         repository.save(aggregate);
         publisher.confirm(aggregate.getEvents());
 
-        return true;
+        return id;
     }
 }

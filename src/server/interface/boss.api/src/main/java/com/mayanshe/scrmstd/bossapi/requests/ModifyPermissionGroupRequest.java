@@ -17,6 +17,7 @@
  */
 package com.mayanshe.scrmstd.bossapi.requests;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -27,6 +28,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModifyPermissionGroupRequest {
+    private String parentId;
+
     @NotBlank(message = "权限组名称不能为空")
     @Size(min = 2, max = 100, message = "权限组名称长度必须在2到100个字符之间")
     private String groupName;

@@ -18,7 +18,11 @@ package com.mayanshe.scrmstd.application.tentant.command;
 
 import com.mayanshe.scrmstd.application.Command;
 
+/**
+ * ActivatePermissionGroupCommand: 激活权限组命令
+ *
+ * @param id 权限组ID
+ */
 public record ActivatePermissionGroupCommand(
         Long id
-) implements Command<Boolean> {
-}
+) implements Command<Boolean> {}

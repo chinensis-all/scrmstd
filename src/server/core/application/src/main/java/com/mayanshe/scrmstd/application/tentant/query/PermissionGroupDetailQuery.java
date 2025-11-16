@@ -19,7 +19,11 @@ package com.mayanshe.scrmstd.application.tentant.query;
 import com.mayanshe.scrmstd.application.Query;
 import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
 
+/**
+ * PermissionGroupDetailQuery: 查询权限组详情
+ *
+ * @param id 权限组ID
+ */
 public record PermissionGroupDetailQuery(
         Long id
-) implements Query<PermissionGroupDto> {
-}
+) implements Query<PermissionGroupDto> { }
