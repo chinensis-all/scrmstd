@@ -15,16 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application;
+package com.mayanshe.scrmstd.tenant.identity.event;
 
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
- * 选项 DTO
+ * DestroyPermissionGroupEvent: 销毁权限组领域事件
  */
-public record OptionDto(String id, String name) {
-    @Override
-    public String id() {
-        return IdGenerator.toBase62(Long.parseLong(id));
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = false)
+public class DestroyPermissionGroupEvent extends DomainEvent {
+    private AggregateId permissionGroupId;
 }

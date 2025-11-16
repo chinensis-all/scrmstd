@@ -252,7 +252,8 @@ CREATE TABLE IF NOT EXISTS `email_logs`
 DROP TABLE IF EXISTS `permission_groups`;
 CREATE TABLE IF NOT EXISTS `permission_groups`
 (
-    `id`              BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    `id`              BIGINT UNSIGNED     NOT NULL PRIMARY KEY COMMENT '主键ID',
+    `parent_id`       BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '父权限组ID，0表示顶级权限组',
     `group_name`      VARCHAR(100)        NOT NULL COMMENT '权限组名称',
     `display_name`    VARCHAR(100)        NOT NULL COMMENT '显示名称',
     `description`     VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '权限组描述',
