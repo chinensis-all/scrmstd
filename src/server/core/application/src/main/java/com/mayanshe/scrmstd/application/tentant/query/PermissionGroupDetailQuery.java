@@ -10,21 +10,20 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
+ * GNU Affero General Public License for more details *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application;
+package com.mayanshe.scrmstd.application.tentant.query;
 
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
 
 /**
- * 选项 DTO
+ * PermissionGroupDetailQuery: 查询权限组详情
+ *
+ * @param id 权限组ID
  */
-public record OptionDto(String id, String name) {
-    @Override
-    public String id() {
-        return IdGenerator.toBase62(Long.parseLong(id));
-    }
-}
+public record PermissionGroupDetailQuery(
+        Long id
+) implements Query<PermissionGroupDto> { }

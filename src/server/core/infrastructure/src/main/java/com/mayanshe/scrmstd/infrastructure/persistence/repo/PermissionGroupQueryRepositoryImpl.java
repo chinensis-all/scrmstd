@@ -18,67 +18,60 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.message.query.dto.EmailTemplateDto;
-import com.mayanshe.scrmstd.application.message.query.repo.EmailTemplateQueryRepository;
-import com.mayanshe.scrmstd.infrastructure.external.converter.EmailTemplateConverter;
-import com.mayanshe.scrmstd.infrastructure.persistence.mapper.EmailTemplateMapper;
+import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
+import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * 邮件模板查询仓储实现
+ * PermissionGroupQueryRepositoryImpl: 权限组查询仓储实现
  */
 @Repository
-public class EmailTemplateQueryRepositoryImpl implements EmailTemplateQueryRepository {
-    private final EmailTemplateMapper mapper;
+public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryRepository {
+    private final PermissionGroupMapper mapper;
+    private final PermissionGroupConverter converter;
 
-    private final EmailTemplateConverter converter;
-
-    public EmailTemplateQueryRepositoryImpl(EmailTemplateMapper mapper, EmailTemplateConverter converter) {
+    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper, PermissionGroupConverter converter) {
         this.mapper = mapper;
         this.converter = converter;
     }
 
     @Override
-    public Optional<EmailTemplateDto> single(Long templateId) {
-        if (templateId == null || templateId <= 0) {
+    public Optional<PermissionGroupDto> single(Long id) {
+        if (id == null || id <= 0) {
             return Optional.empty();
         }
 
-        EmailTemplateDto dto = mapper.selectById(templateId);
-        if (dto != null) {
-            return Optional.of(dto);
-        }
+        PermissionGroupDto dto = converter.toDto(mapper.findById(id));
 
-        return Optional.empty();
+        return Optional.ofNullable(dto);
     }
 
     @Override
     public List<OptionDto> search(Map<String, Object> criteria, long limit) {
-        if (criteria == null) {
-            criteria = new HashMap<>();
-        }
-        if (limit > 0) {
+        if (!criteria.containsKey("limit")) {
             criteria.put("limit", limit);
-        } else {
-            criteria.put("limit", 200);
         }
-
-        return mapper.search(criteria).stream().map(po -> new OptionDto(po.getId().toString(), po.getTemplateName())).toList();
+        return mapper.search(criteria).stream()
+                .map(po -> new OptionDto(String.valueOf(po.getId()), po.getGroupName()))
+                .toList();
     }
 
     @Override
-    public Pagination<EmailTemplateDto> paginate(Map<String, Object> criteria, long page, long size) {
-        if (criteria == null) {
-            criteria = new HashMap<>();
+    public Pagination<PermissionGroupDto> paginate(Map<String, Object> criteria, long page, long size) {
+        if (!criteria.containsKey("offset")) {
+            criteria.put("offset", (page - 1) * size);
         }
-
+        if (!criteria.containsKey("limit")) {
+            criteria.put("limit", size);
+        }
         return Pager.paginate(mapper, criteria, converter::toDto, page, size);
     }
 }

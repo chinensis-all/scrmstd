@@ -67,7 +67,8 @@
         "[领域模型]中create方法不接收任何参数，添加[创建领域事件]",
         "[领域模型]中modify方法接收模型中private属性对应的字段作为参数，添加[修改领域事件]",
         "[领域模型]中destroy方法不接收任何参数，添加[禁用领域事件]",
-        "[领域模型]中activate方法不接收任何参数，添加[激活领域事件]"
+        "[领域模型]中activate方法不接收任何参数，添加[激活领域事件]",
+        "[查询DTO]中的id()方法应重写，调用com.mayanshe.scrmstd.shared.contract.IdGenerator.toBase62(this.id)返回String类型ID,如果有parentId(),也应该遵循此规则"
       ]
     },
     {
@@ -81,7 +82,7 @@
         "roles": [
             "[xml映射文件]命名规则: [驼峰化表名]Mapper.xml ",
             "[Mapper映射接口]命名规则: [驼峰化表名]Mapper ",
-            "[对象转换接口]命名规则: [驼峰化表名]Convert ",
+            "[对象转换接口]命名规则: [驼峰化表名]Converter ",
             "简单的sql语句（不涉及分页，查询条件不操作三个，返回*或返回字段不超过5个），都使用@Select, @Insert, @Update, @Delete等注解来实现，不要写在xml文件中。 其它在xml中实现",
             "只包含toPo([领域模型]到[持久化模型])、updatePo(用[领域模型]更新[持久化模型])、toAggregate([持久化模型]到[领域模型])， toDto([持久化模型]到[查询DTO])、toOptionDto([持久化模型]到[查询DTO])方法",
             "`[基础设施层]/[持久化对象-聚合根-DTO相互转换接口]`文件夹下下存在一个`IConverter.java`文件， 里面包含一些通用类型转换，可继承"
@@ -114,10 +115,10 @@
             "在`[应用层]/[所属领域]/command`文件夹下创建[修改命令载体]，并完成代码",
             "在`[应用层]/[所属领域]/command`文件夹下创建[禁用命令载体]，并文成代码",
             "在`[应用层]/[所属领域]/command`文件夹下创建[激活命令载体]，并完成代码",
-            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[创建命令处理], 并完成代码",
-            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[修改命令实现]， 并完成代码",
-            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[禁用命令实现]， 并完成代码",
-            "在`[应用层]/[所属领域]/command/impl`文件夹下创建[激活命令实现]， 并完成代码"
+            "在`[应用层]/[所属领域]/command/handler`文件夹下创建[创建命令处理], 并完成代码",
+            "在`[应用层]/[所属领域]/command/handler`文件夹下创建[修改命令实现]， 并完成代码",
+            "在`[应用层]/[所属领域]/command/handler`文件夹下创建[禁用命令实现]， 并完成代码",
+            "在`[应用层]/[所属领域]/command/handler`文件夹下创建[激活命令实现]， 并完成代码"
         ],
         "roles": [
             "[创建命令载体]命名规则: Create[驼峰化表名]Command , 类型为Record, 实现Command<IDResponse>",
@@ -139,23 +140,29 @@
         "descriptions": [
             "在`[应用层]/[所属领域]/query`文件夹下创建[查询详情载体]",
             "在`[应用层]/[所属领域]/query`文件夹下创建[查询Option列表载体]",
-            "在`[应用层]/[所属领域]/query`文件夹下创建[查询分页载体]"
+            "在`[应用层]/[所属领域]/query`文件夹下创建[查询分页载体]",
+            "在`[应用层]/[所属领域]/query/handler`文件夹下创建[详情查询]",
+            "在`[应用层]/[所属领域]/query/handler`文件夹下创建[Option列表查询]",
+            "在`[应用层]/[所属领域]/query/handler`文件夹下创建[分页查询]"
         ],
         "roles": [
             "[查询详情载体]命名规则: [驼峰化表名]DetailQuery , 类型为Record, 实现Query<[查询DTO]>",
             "[查询详情载体]属性只包含id属性",
-            "[查询Option列表载体]命名规则:[驼峰化表名]OptionLQuery , 类型为Record, 实现Query<List<[OptionDto]>>",
+            "[查询Option列表载体]命名规则:[驼峰化表名]OptionQuery , 类型为Record, 实现Query<List<[OptionDto]>>",
             "[查询分页载体]命名规则: [驼峰化表名]PaginationQuery , 类型为Record, 实现Query<Pagination<[查询DTO]>>",
-            "[查询分页载体]属性可以为空，包含page、pageSize属性"
+            "[查询分页载体]属性可以为空，包含page、pageSize属性",
+            "[详情查询]命名规则: Get[驼峰化表名]DetailHandler , 实现QueryHandler<[查询详情载体], [查询DTO]>",
+            "[Option列表查询]命名规则: Get[驼峰化表名]OptionHandler , 实现QueryHandler<[查询Option列表载体], List<[OptionDto]>",
+            "[分页查询]命名规则: Get[驼峰化表名]PaginationHandler , 实现QueryHandler<[查询分页载体], Pagination<[查询DTO]>>"
         ]
     },
     {
         "step": 6,
         "name": "实现Boos.Api中的接口",
         "descriptions": [
-            "在`[Boss接口]/request`文件夹下创建[创建请求体], 并完成代码",
-            "在`[Boss接口]/request`文件夹下创建[修改请求体], 并完成代码",
-            "在`[Boss接口]/controller/`文件夹下创建[控制器类], 并完成代码"
+            "在`[Boss接口]/requests`文件夹下创建[创建请求体], 并完成代码",
+            "在`[Boss接口]/requests`文件夹下创建[修改请求体], 并完成代码",
+            "在`[Boss接口]/controller`文件夹下创建[控制器类], 并完成代码"
         ],
         "roles": [
             "[创建请求体]命名规则: Create[驼峰化表名]Request , 类型为Record",

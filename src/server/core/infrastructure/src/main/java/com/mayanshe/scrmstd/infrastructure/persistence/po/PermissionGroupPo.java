@@ -15,16 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application;
+package com.mayanshe.scrmstd.infrastructure.persistence.po;
 
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+import lombok.*;
 
 /**
- * 选项 DTO
+ * PermissionGroupPo: 权限组持久化对象
  */
-public record OptionDto(String id, String name) {
-    @Override
-    public String id() {
-        return IdGenerator.toBase62(Long.parseLong(id));
-    }
+@Getter
+@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class PermissionGroupPo {
+    private Long id;              // 主键ID
+
+    private Long parentId;        // 父权限组ID
+
+    private String groupName;     // 权限组名称
+
+    private String displayName;   // 显示名称
+
+    private String description;   // 权限组描述
+
+    @Builder.Default
+    private Long createdAt = 0L;  // 创建时间
+
+    @Builder.Default
+    private Long updatedAt = 0L;  // 更新时间
+
+    @Builder.Default
+    private Long deletedAt = 0L;  // 软删除时间
 }

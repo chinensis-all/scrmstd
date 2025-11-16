@@ -10,21 +10,26 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
+ * GNU Affero General Public License for more details *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application;
+package com.mayanshe.scrmstd.application.tentant.command;
 
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
+import com.mayanshe.scrmstd.application.Command;
+import com.mayanshe.scrmstd.shared.model.IDResponse;
 
 /**
- * 选项 DTO
+ * CreatePermissionGroupCommand: 创建权限组命令
+ *
+ * @param parentId     上级权限组ID
+ * @param groupName    权限组名称
+ * @param displayName  权限组显示名称
+ * @param description  权限组描述
  */
-public record OptionDto(String id, String name) {
-    @Override
-    public String id() {
-        return IdGenerator.toBase62(Long.parseLong(id));
-    }
-}
+public record CreatePermissionGroupCommand(
+        Long parentId,
+        String groupName,
+        String displayName,
+        String description
+) implements Command<Long> {}
