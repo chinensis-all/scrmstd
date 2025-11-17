@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionMapper">
+    <!-- 权限(permissions)表映射 -->
+
+    <insert id="insert" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo" useGeneratedKeys="false">
+        INSERT INTO permissions (id, group_id, permission_name, display_name, description, created_at)
+        VALUES (#{id}, #{groupId}, #{permissionName}, #{displayName}, #{description}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo">
+        UPDATE permissions
+        SET group_id    = #{groupId},
+            permission_name   = #{permissionName},
+            display_name = #{displayName},
+            description  = #{description},
+            updated_at   = #{updatedAt},
+            deleted_at   = #{deletedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete" parameterType="Long">
+        UPDATE permissions
+        SET deleted_at = UNIX_TIMESTAMP(NOW(3)) * 1000
+        WHERE id = #{id}
+          and deleted_at = 0
+    </update>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="permissionName != null">
+                AND permission_name = #{permissionName}
+            </if>
+            <if test="displayName != null">
+                AND display_name = #{displayName}
+            </if>
+            <if test="keywords != null">
+                AND (permission_name LIKE CONCAT('%', #{keywords}, '%')
+                OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="deleted != null and deleted == true">
+                AND deleted_at > 0
+            </if>
+            <if test="deleted != null and deleted == false">
+                AND deleted_at = 0
+            </if>
+        </where>
+    </sql>
+
+    <select id="findIdByCondition" parameterType="Map" resultType="Long">
+        SELECT id
+        FROM permissions
+        <include refid="condition"/>
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="count" parameterType="Map" resultType="Long">
+        SELECT count(*)
+        FROM permissions
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo">
+        SELECT id, group_id, permission_name, display_name, description, created_at, updated_at, deleted_at
+        FROM permissions
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>
