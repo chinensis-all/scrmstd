@@ -10,20 +10,23 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details *
+ * GNU Affero General Public License for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query;
+package com.mayanshe.scrmstd.application.tenant.command;
 
-import com.mayanshe.scrmstd.application.Query;
-import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.shared.contract.Command;
 
 /**
- * PermissionGroupDetailQuery: 查询权限组详情
- *
- * @param id 权限组ID
+ * ModifyPermissionGroupCommand: 修改权限组命令
  */
-public record PermissionGroupDetailQuery(
-        Long id
-) implements Query<PermissionGroupDto> { }
+public record ModifyPermissionGroupCommand(
+        Long id,
+        Long parentId,
+        String groupName,
+        String displayName,
+        String description
+) implements Command<Boolean> {
+}

@@ -10,24 +10,19 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details *
+ * GNU Affero General Public License for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query;
+package com.mayanshe.scrmstd.application.tenant.command;
 
-import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.Query;
-
-import java.util.List;
+import com.mayanshe.scrmstd.shared.contract.Command;
 
 /**
- * PermissionGroupOptionLQuery: 查询权限组下拉选项
- *
- * @param parentId 上级权限组ID
- * @param keywords 关键字
+ * ActivatePermissionGroupCommand: 激活权限组命令
  */
-public record PermissionGroupOptionQuery(
-        Long parentId,
-        String keywords
-) implements Query<List<OptionDto>> {}
+public record ActivatePermissionGroupCommand(
+        Long id
+) implements Command<Boolean> {
+}

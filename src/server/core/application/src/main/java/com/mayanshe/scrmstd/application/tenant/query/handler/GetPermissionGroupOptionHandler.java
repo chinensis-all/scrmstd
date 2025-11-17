@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query.handler;
+package com.mayanshe.scrmstd.application.tenant.query.handler;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.QueryHandler;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupOptionQuery;
-import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupOptionQuery;
+import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.shared.contract.QueryHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,14 +31,14 @@ import java.util.List;
  */
 @Service
 public class GetPermissionGroupOptionHandler implements QueryHandler<PermissionGroupOptionQuery, List<OptionDto>> {
-    private final PermissionGroupQueryRepository repository;
+    private final PermissionGroupQueryRepository permissionGroupQueryRepository;
 
-    public GetPermissionGroupOptionHandler(PermissionGroupQueryRepository repository) {
-        this.repository = repository;
+    public GetPermissionGroupOptionHandler(PermissionGroupQueryRepository permissionGroupQueryRepository) {
+        this.permissionGroupQueryRepository = permissionGroupQueryRepository;
     }
 
     @Override
     public List<OptionDto> handle(PermissionGroupOptionQuery query) {
-        return repository.search(query.toMap(), 200);
+        return permissionGroupQueryRepository.search(Collections.emptyMap(), 100);
     }
 }

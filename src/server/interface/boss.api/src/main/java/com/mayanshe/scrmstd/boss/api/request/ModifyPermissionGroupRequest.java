@@ -10,19 +10,20 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details *
+ * GNU Affero General Public License for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command;
-
-import com.mayanshe.scrmstd.application.Command;
+package com.mayanshe.scrmstd.boss.api.request;
 
 /**
- * 删除权限组命令
- *
- * @param id 权限组ID
+ * ModifyPermissionGroupRequest: 修改权限组请求
  */
-public record DestroyPermissionGroupCommand(
-        Long id
-) implements Command<Boolean> {}
+public record ModifyPermissionGroupRequest(
+        String parentId,
+        String groupName,
+        String displayName,
+        String description
+) {
+}

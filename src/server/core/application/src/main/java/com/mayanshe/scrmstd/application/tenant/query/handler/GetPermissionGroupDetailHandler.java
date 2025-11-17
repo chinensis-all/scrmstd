@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query.handler;
+package com.mayanshe.scrmstd.application.tenant.query.handler;
 
-import com.mayanshe.scrmstd.application.QueryHandler;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupDetailQuery;
-import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
-import com.mayanshe.scrmstd.shared.exception.ResourceNotFoundException;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupDetailQuery;
+import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.shared.contract.QueryHandler;
+import com.mayanshe.scrmstd.shared.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,15 +29,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GetPermissionGroupDetailHandler implements QueryHandler<PermissionGroupDetailQuery, PermissionGroupDto> {
-    private final PermissionGroupQueryRepository repository;
+    private final PermissionGroupQueryRepository permissionGroupQueryRepository;
 
-    public GetPermissionGroupDetailHandler(PermissionGroupQueryRepository repository) {
-        this.repository = repository;
+    public GetPermissionGroupDetailHandler(PermissionGroupQueryRepository permissionGroupQueryRepository) {
+        this.permissionGroupQueryRepository = permissionGroupQueryRepository;
     }
 
     @Override
     public PermissionGroupDto handle(PermissionGroupDetailQuery query) {
-        return repository.single(query.id())
-                .orElseThrow(() -> new ResourceNotFoundException("Permission group not found"));
+        return permissionGroupQueryRepository.single(query.id())
+                .orElseThrow(() -> new NotFoundException("权限组不存在，ID：" + query.id()));
     }
 }

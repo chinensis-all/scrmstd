@@ -15,38 +15,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command.handler;
+package com.mayanshe.scrmstd.application.tenant.command.handler;
 
-import com.mayanshe.scrmstd.application.CommandHandler;
-import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.tentant.command.ModifyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.command.ModifyPermissionGroupCommand;
+import com.mayanshe.scrmstd.shared.contract.CommandHandler;
+import com.mayanshe.scrmstd.shared.exception.NotFoundException;
 import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
 import com.mayanshe.scrmstd.tenant.identity.repo.PermissionGroupRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ModifyPermissionGroupHandler: 修改权限组命令处理器
  */
 @Service
 public class ModifyPermissionGroupHandler implements CommandHandler<ModifyPermissionGroupCommand, Boolean> {
-    private final DomainEventPublisher publisher;
-    private final PermissionGroupRepository repository;
+    private final PermissionGroupRepository permissionGroupRepository;
 
-    public ModifyPermissionGroupHandler(DomainEventPublisher publisher, PermissionGroupRepository repository) {
-        this.publisher = publisher;
-        this.repository = repository;
+    public ModifyPermissionGroupHandler(PermissionGroupRepository permissionGroupRepository) {
+        this.permissionGroupRepository = permissionGroupRepository;
     }
 
     @Override
-    @Transactional
     public Boolean handle(ModifyPermissionGroupCommand command) {
-        PermissionGroup aggregate = repository.load(command.id()).orElseThrow(() -> new IllegalArgumentException("权限组不存在, ID=" + command.id()));
-        aggregate.modify(command.parentId(), command.groupName(), command.displayName(), command.description());
-
-        repository.save(aggregate);
-        publisher.confirm(aggregate.getEvents());
-
+        PermissionGroup permissionGroup = permissionGroupRepository.load(command.id())
+                .orElseThrow(() -> new NotFoundException("权限组不存在，ID：" + command.id()));
+        permissionGroup.modify(
+                command.parentId(),
+                command.groupName(),
+                command.displayName(),
+                command.description()
+        );
+        permissionGroupRepository.save(permissionGroup);
         return true;
     }
 }

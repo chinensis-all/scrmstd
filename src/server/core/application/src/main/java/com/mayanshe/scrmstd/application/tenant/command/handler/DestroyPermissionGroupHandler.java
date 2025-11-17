@@ -15,38 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command.handler;
+package com.mayanshe.scrmstd.application.tenant.command.handler;
 
-import com.mayanshe.scrmstd.application.CommandHandler;
-import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.tentant.command.DestroyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.command.DestroyPermissionGroupCommand;
+import com.mayanshe.scrmstd.shared.contract.CommandHandler;
+import com.mayanshe.scrmstd.shared.exception.NotFoundException;
 import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
 import com.mayanshe.scrmstd.tenant.identity.repo.PermissionGroupRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * DestroyPermissionGroupHandler: 删除权限组命令处理器
+ * DestroyPermissionGroupHandler: 禁用权限组命令处理器
  */
 @Service
 public class DestroyPermissionGroupHandler implements CommandHandler<DestroyPermissionGroupCommand, Boolean> {
-    private final DomainEventPublisher publisher;
-    private final PermissionGroupRepository repository;
+    private final PermissionGroupRepository permissionGroupRepository;
 
-    public DestroyPermissionGroupHandler(DomainEventPublisher publisher, PermissionGroupRepository repository) {
-        this.publisher = publisher;
-        this.repository = repository;
+    public DestroyPermissionGroupHandler(PermissionGroupRepository permissionGroupRepository) {
+        this.permissionGroupRepository = permissionGroupRepository;
     }
 
     @Override
-    @Transactional
     public Boolean handle(DestroyPermissionGroupCommand command) {
-        PermissionGroup aggregate = repository.load(command.id()).orElseThrow(() -> new IllegalArgumentException("权限组不存在, ID=" + command.id()));
-        aggregate.destroy();
-
-        repository.save(aggregate);
-        publisher.confirm(aggregate.getEvents());
-
+        PermissionGroup permissionGroup = permissionGroupRepository.load(command.id())
+                .orElseThrow(() -> new NotFoundException("权限组不存在，ID：" + command.id()));
+        permissionGroup.destroy();
+        permissionGroupRepository.save(permissionGroup);
         return true;
     }
 }

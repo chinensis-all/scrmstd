@@ -10,16 +10,20 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details *
+ * GNU Affero General Public License for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query.repo;
+package com.mayanshe.scrmstd.boss.api.request;
 
-import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.QueryRepository;
-import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
-
-public interface PermissionGroupQueryRepository extends QueryRepository<PermissionGroupDto, OptionDto, Long> {
-
+/**
+ * CreatePermissionGroupRequest: 创建权限组请求
+ */
+public record CreatePermissionGroupRequest(
+        String parentId,
+        String groupName,
+        String displayName,
+        String description
+) {
 }

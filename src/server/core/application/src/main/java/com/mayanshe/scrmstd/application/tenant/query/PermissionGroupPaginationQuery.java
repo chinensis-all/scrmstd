@@ -9,20 +9,23 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details *
+ * MERCHANTABILITY_OR_FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.command;
+package com.mayanshe.scrmstd.application.tenant.query;
 
-import com.mayanshe.scrmstd.application.Command;
+import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.shared.contract.Query;
+import com.mayanshe.scrmstd.shared.model.Pagination;
 
 /**
- * ActivatePermissionGroupCommand: 激活权限组命令
- *
- * @param id 权限组ID
+ * PermissionGroupPaginationQuery: 权限组分页查询
  */
-public record ActivatePermissionGroupCommand(
-        Long id
-) implements Command<Boolean> {}
+public record PermissionGroupPaginationQuery(
+        int page,
+        int pageSize
+) implements Query<Pagination<PermissionGroupDto>> {
+}

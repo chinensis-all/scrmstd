@@ -15,28 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.tentant.query.handler;
+package com.mayanshe.scrmstd.application.tenant.query.handler;
 
-import com.mayanshe.scrmstd.application.QueryHandler;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupPaginationQuery;
-import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupPaginationQuery;
+import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.shared.contract.QueryHandler;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 /**
  * GetPermissionGroupPaginationHandler: 获取权限组分页查询处理器
  */
 @Service
 public class GetPermissionGroupPaginationHandler implements QueryHandler<PermissionGroupPaginationQuery, Pagination<PermissionGroupDto>> {
-    private final PermissionGroupQueryRepository repository;
+    private final PermissionGroupQueryRepository permissionGroupQueryRepository;
 
-    public GetPermissionGroupPaginationHandler(PermissionGroupQueryRepository repository) {
-        this.repository = repository;
+    public GetPermissionGroupPaginationHandler(PermissionGroupQueryRepository permissionGroupQueryRepository) {
+        this.permissionGroupQueryRepository = permissionGroupQueryRepository;
     }
 
     @Override
     public Pagination<PermissionGroupDto> handle(PermissionGroupPaginationQuery query) {
-        return repository.paginate(query.toMap(), query.page(), query.pageSize());
+        return permissionGroupQueryRepository.paginate(Collections.emptyMap(), query.page(), query.pageSize());
     }
 }
