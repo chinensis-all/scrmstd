@@ -1,9 +1,9 @@
 {
-  "name": "SaaS权限组CRUD开发任务",
+  "name": "SaaS权限（Permission）CRUD开发任务",
   "description": [
-    "实现权限组的领域逻辑，及在Boos.Api中实现权限组的CRUD接口。",
-    "权限组用于权限分组",
-    "多级权限组",
+    "Git分支名称: feature-permission-crud",
+    "实现权限的领域逻辑，及在Boos.Api中实现权限的CRUD接口。",
+    "权限的groupId关联到permission_groups表的id字段",
     "[所属领域]=租户领域(tenant)",
     "[所属上下文]=租户身份与访问控制(identity)"
   ],
