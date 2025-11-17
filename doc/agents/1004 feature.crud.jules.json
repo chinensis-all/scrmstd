@@ -1,11 +1,11 @@
 {
-  "name": "SaaS权限组CRUD开发任务",
+  "name": "SaaS Feature CRUD开发任务",
   "description": [
-    "实现权限组的领域逻辑，及在Boos.Api中实现权限组的CRUD接口。",
-    "权限组用于权限分组",
-    "多级权限组",
+    "实现Feature的领域逻辑，及在Boos.Api中实现权限组的CRUD接口。",
+    "功能是用于租户进行订阅系统功能模块",
+    "多级Saas功能",
     "[所属领域]=租户领域(tenant)",
-    "[所属上下文]=租户身份与访问控制(identity)"
+    "[所属上下文]=租户订阅(subscription)"
   ],
   "prepares": [
     {
@@ -18,8 +18,8 @@
       "name": "了解项目",
       "descriptions": [
         "涉及到的数据库表已经为你定义好，放在 schema.sql 文件中，你可以仔细理解以下表的意图:",
-        "[表名]=`permissions`",
-        "[驼峰化表名]=Permission"
+        "[表名]=`features`",
+        "[驼峰化表名]=Feature"
       ]
     }
   ],
