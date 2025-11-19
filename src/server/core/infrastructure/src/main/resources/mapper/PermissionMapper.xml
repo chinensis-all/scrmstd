@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionMapper">
+    <!-- 权限(permissions)表映射 -->
+
+    <insert id="insert" parameterType="PermissionPo" useGeneratedKeys="false">
+        INSERT INTO permissions (id, group_id, permission_name, display_name, description, created_at)
+        VALUES (#{id}, #{groupId}, #{permissionName}, #{displayName}, #{description}, #{createdAt})
+    </insert>
+
+    <update id="update" parameterType="PermissionPo">
+        UPDATE permissions
+        SET group_id    = #{groupId},
+            permission_name   = #{permissionName},
+            display_name = #{displayName},
+            description  = #{description},
+            updated_at   = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM permissions
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="PermissionPo">
+        SELECT id, group_id, permission_name, display_name, description, created_at, updated_at
+        FROM permissions
+        WHERE id = #{id}
+    </select>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="permissionName != null">
+                AND permission_name = #{permissionName}
+            </if>
+            <if test="displayName != null">
+                AND display_name = #{displayName}
+            </if>
+            <if test="keywords != null">
+                AND (permission_name LIKE CONCAT('%', #{keywords}, '%')
+                OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <select id="findIdByCondition" parameterType="Map" resultType="Long">
+        SELECT id
+        FROM permissions
+        <include refid="condition"/>
+    </select>
+
+    <select id="count" parameterType="Map" resultType="Long">
+        SELECT count(*)
+        FROM permissions
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="PermissionPo">
+        SELECT id, group_id, permission_name, display_name, description, created_at, updated_at
+        FROM permissions
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
+</mapper>
