@@ -57,15 +57,6 @@
         SELECT id
         FROM permission_groups
         <include refid="condition"/>
-        <if test="orderBy != null">
-            ORDER BY ${orderBy}
-        </if>
-        <if test="limit != null">
-            LIMIT #{limit}
-        </if>
-        <if test="offset != null">
-            OFFSET #{offset}
-        </if>
     </select>
 
     <select id="count" parameterType="Map" resultType="Long">

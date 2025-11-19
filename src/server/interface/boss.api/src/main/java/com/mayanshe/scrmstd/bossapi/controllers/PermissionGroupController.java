@@ -19,22 +19,24 @@ package com.mayanshe.scrmstd.bossapi.controllers;
 
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.QueryBus;
-import com.mayanshe.scrmstd.application.tentant.command.ActivatePermissionGroupCommand;
-import com.mayanshe.scrmstd.application.tentant.command.CreatePermissionGroupCommand;
-import com.mayanshe.scrmstd.application.tentant.command.DestroyPermissionGroupCommand;
-import com.mayanshe.scrmstd.application.tentant.command.ModifyPermissionGroupCommand;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupDetailQuery;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupOptionQuery;
-import com.mayanshe.scrmstd.application.tentant.query.PermissionGroupPaginationQuery;
+import com.mayanshe.scrmstd.application.tenant.command.ActivatePermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.command.CreatePermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.command.DestroyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.command.ModifyPermissionGroupCommand;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupDetailQuery;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupOptionQuery;
+import com.mayanshe.scrmstd.application.tenant.query.PermissionGroupPaginationQuery;
 import com.mayanshe.scrmstd.bossapi.requests.CreatePermissionGroupRequest;
 import com.mayanshe.scrmstd.bossapi.requests.ModifyPermissionGroupRequest;
 import com.mayanshe.scrmstd.shared.contract.IdGenerator;
 import com.mayanshe.scrmstd.shared.model.IDResponse;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.*;
 
+/*
+ * PermissionGroupController: 权限组控制器
+ */
 @RestController
 @RequestMapping("/permission-groups")
 public class PermissionGroupController {

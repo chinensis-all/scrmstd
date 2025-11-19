@@ -18,8 +18,8 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tentant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.application.tentant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
@@ -43,6 +43,12 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
         this.converter = converter;
     }
 
+    /**
+     * 获取单个权限组
+     *
+     * @param id 主键
+     * @return   权限组DTO
+     */
     @Override
     public Optional<PermissionGroupDto> single(Long id) {
         if (id == null || id <= 0) {
@@ -54,6 +60,9 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
         return Optional.ofNullable(dto);
     }
 
+    /**
+     * 搜索权限组选项列表
+     */
     @Override
     public List<OptionDto> search(Map<String, Object> criteria, long limit) {
         if (!criteria.containsKey("limit")) {
@@ -64,6 +73,9 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
                 .toList();
     }
 
+    /*
+     * 分页查询权限组
+     */
     @Override
     public Pagination<PermissionGroupDto> paginate(Map<String, Object> criteria, long page, long size) {
         if (!criteria.containsKey("offset")) {

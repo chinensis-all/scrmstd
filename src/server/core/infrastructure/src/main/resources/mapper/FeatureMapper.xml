@@ -3,24 +3,99 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper">
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO features (parent_id, feature_name, display_name, description, created_at, updated_at)
-        VALUES (#{parentId}, #{featureName}, #{displayName}, #{description}, #{createdAt}, #{updatedAt})
+    <!-- Saas系统功能点表(features) -->
+
+    <insert id="insert" parameterType="FeaturePo"  useGeneratedKeys="false">
+        INSERT INTO features (id, parent_id, feature_name, display_name, description, configurable, created_at)
+        VALUES (#{id}, #{parentId}, #{featureName}, #{displayName}, #{description}, #{configurable}, #{createdAt})
     </insert>
 
-    <update id="update">
+    <update id="update" parameterType="FeaturePo">
         UPDATE features
         SET parent_id = #{parentId},
             feature_name = #{featureName},
             display_name = #{displayName},
             description = #{description},
-            updated_at = #{updatedAt}
-        WHERE id = #{id}
+            configurable = #{configurable},
+            updated_at = #{updatedAt},
+            deleted_at = #{deletedAt},
+            version = version + 1
+        WHERE id = #{id} and version = #{version}
     </update>
 
-    <update id="delete">
+    <update id="delete" parameterType="FeaturePo">
         UPDATE features
-        SET deleted_at = #{deletedAt}
-        WHERE id = #{id}
+        SET deleted_at = #{deletedAt},
+        version = version + 1
+        WHERE id = #{id} and version = #{version}
     </update>
+
+    <sql id="condition">
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="featureName != null">
+                AND feature_name = #{featureName}
+            </if>
+            <if test="displayName != null">
+                AND display_name = #{displayName}
+            </if>
+            <if test="keywords != null">
+                AND (feature_name LIKE CONCAT('%', #{keywords}, '%')
+                OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="configurable != null and configurable == true">
+                AND configurable = 1
+            </if>
+            <if test="configurable != null and configurable == false">
+                AND configurable = 0
+            </if>
+            <if test="deleted != null and deleted == true">
+                AND deleted_at > 0
+            </if>
+            <if test="deleted != null and deleted == false">
+                AND deleted_at = 0
+            </if>
+        </where>
+    </sql>
+
+    <select id="findIdByCondition" parameterType="Map" resultType="Long">
+        SELECT id
+        FROM features
+        <include refid="condition"/>
+    </select>
+
+    <select id="count" parameterType="Map" resultType="Long">
+        SELECT count(*)
+        FROM features
+        <include refid="condition"/>
+    </select>
+
+    <select id="search" parameterType="Map" resultType="FeaturePo">
+        SELECT *
+        FROM features
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
+        </if>
+    </select>
 </mapper>
