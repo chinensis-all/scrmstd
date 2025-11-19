@@ -18,10 +18,11 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
-import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
-import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
+import com.mayanshe.scrmstd.application.tenant.query.repo.FeatureQueryRepository;
+import com.mayanshe.scrmstd.application.tenant.query.dto.FeatureDto;
+import com.mayanshe.scrmstd.infrastructure.external.converter.FeatureConverter;
+import com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper;
+import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import org.springframework.stereotype.Repository;
@@ -31,59 +32,47 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * PermissionGroupQueryRepositoryImpl: 权限组查询仓储实现
+ * FeatureQueryRepositoryImpl: Saas功能点查询仓储实现
  */
 @Repository
-public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryRepository {
-    private final PermissionGroupMapper mapper;
-    private final PermissionGroupConverter converter;
+public class FeatureQueryRepositoryImpl implements FeatureQueryRepository {
+    private final FeatureMapper mapper;
 
-    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper, PermissionGroupConverter converter) {
+    public FeatureQueryRepositoryImpl(FeatureMapper mapper) {
         this.mapper = mapper;
-        this.converter = converter;
     }
 
-    /**
-     * 获取单个权限组
-     *
-     * @param id 主键
-     * @return   权限组DTO
-     */
     @Override
-    public Optional<PermissionGroupDto> single(Long id) {
+    public Optional<FeatureDto> single(Long id) {
         if (id == null || id <= 0) {
             return Optional.empty();
         }
 
-        PermissionGroupDto dto = converter.toDto(mapper.findById(id));
+        FeaturePo po = mapper.findById(id);
+        if (po == null) {
+            return Optional.empty();
+        }
 
-        return Optional.ofNullable(dto);
+        FeatureDto dto = FeatureConverter.INSTANCE.toDto(po);
+        return Optional.of(dto);
     }
 
-    /**
-     * 搜索权限组选项列表
-     */
     @Override
     public List<OptionDto> search(Map<String, Object> criteria, long limit) {
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", limit);
         }
-        return mapper.search(criteria).stream()
-                .map(po -> new OptionDto(String.valueOf(po.getId()), po.getGroupName()))
-                .toList();
+        return mapper.search(criteria).stream().map(po -> new OptionDto(String.valueOf(po.getId()), po.getFeatureName())).toList();
     }
 
-    /*
-     * 分页查询权限组
-     */
     @Override
-    public Pagination<PermissionGroupDto> paginate(Map<String, Object> criteria, long page, long size) {
+    public Pagination<FeatureDto> paginate(Map<String, Object> criteria, long page, long size) {
         if (!criteria.containsKey("offset")) {
             criteria.put("offset", (page - 1) * size);
         }
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", size);
         }
-        return Pager.paginate(mapper, criteria, converter::toDto, page, size);
+        return Pager.paginate(mapper, criteria, FeatureConverter.INSTANCE::toDto, page, size);
     }
 }

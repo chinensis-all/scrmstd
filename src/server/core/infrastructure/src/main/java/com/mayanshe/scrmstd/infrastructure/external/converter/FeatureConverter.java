@@ -18,47 +18,56 @@
 package com.mayanshe.scrmstd.infrastructure.external.converter;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionGroupPo;
-import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
+import com.mayanshe.scrmstd.application.tenant.query.dto.FeatureDto;
+import com.mayanshe.scrmstd.tenant.subscription.model.Feature;
+import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-@Component
-public interface PermissionGroupConverter extends BaseConverter {
-    PermissionGroupConverter INSTANCE = Mappers.getMapper(PermissionGroupConverter.class);
+/**
+ * FeatureConverter: 功能信息转换器
+ */
+@Mapper
+public interface FeatureConverter extends BaseConverter {
+    FeatureConverter INSTANCE = Mappers.getMapper(FeatureConverter.class);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
+            @Mapping(target = "configurable", source = "configurable", qualifiedByName = "booleanToByte"),
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
             @Mapping(target = "deletedAt", source = "deleted", qualifiedByName = "deletedToDeletedAt"),
     })
-    PermissionGroupPo toPo(PermissionGroup aggregate);
+    FeaturePo toPo(Feature aggregate);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
+            @Mapping(target = "configurable", source = "configurable", qualifiedByName = "booleanToByte"),
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
             @Mapping(target = "deletedAt", source = "deleted", qualifiedByName = "deletedToDeletedAt"),
     })
-    PermissionGroupPo updatePo(PermissionGroup aggregate, @MappingTarget PermissionGroupPo po);
+    FeaturePo updatePo(@MappingTarget FeaturePo po, Feature aggregate);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "idToAggregateId"),
+            @Mapping(target = "configurable", source = "configurable", qualifiedByName = "byteToBoolean"),
             @Mapping(target = "deleted", source = "deletedAt", qualifiedByName = "deletedAtToDeleted"),
     })
-    PermissionGroup toAggregate(PermissionGroupPo po);
+    Feature toAggregate(FeaturePo po);
 
-    @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))")
-    PermissionGroupDto toDto(PermissionGroupPo po);
+    @Mappings({
+            @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))"),
+            @Mapping(target = "configurable", source = "configurable", qualifiedByName = "byteToBoolean")
+    })
+    FeatureDto toDto(FeaturePo po);
 
-    @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))")
-    @Mapping(target = "name", source = "displayName")
-    OptionDto toOptionDto(PermissionGroupPo po);
+    @Mappings({
+            @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))"),
+            @Mapping(target = "name", source = "displayName")
+    })
+    OptionDto toOptionDto(FeaturePo po);
 }

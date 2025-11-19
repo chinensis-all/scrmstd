@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper">
-    <!-- 权限组(permission_groups)表映射 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper">
+    <!-- Saas系统功能点表(features) -->
 
-    <insert id="insert" parameterType="PermissionGroupPo" useGeneratedKeys="false">
-        INSERT INTO permission_groups (id, parent_id, group_name, display_name, description, created_at)
-        VALUES (#{id}, #{parentId}, #{groupName}, #{displayName}, #{description}, #{createdAt})
+    <insert id="insert" parameterType="FeaturePo"  useGeneratedKeys="false">
+        INSERT INTO features (id, parent_id, feature_name, display_name, description, configurable, created_at)
+        VALUES (#{id}, #{parentId}, #{featureName}, #{displayName}, #{description}, #{configurable}, #{createdAt})
     </insert>
 
-    <update id="update" parameterType="PermissionGroupPo">
-        UPDATE permission_groups
-        SET parent_id    = #{parentId},
-            group_name   = #{groupName},
+    <update id="update" parameterType="FeaturePo">
+        UPDATE features
+        SET parent_id = #{parentId},
+            feature_name = #{featureName},
             display_name = #{displayName},
-            description  = #{description},
-            updated_at   = #{updatedAt},
-            deleted_at   = #{deletedAt}
-        WHERE id = #{id}
+            description = #{description},
+            configurable = #{configurable},
+            updated_at = #{updatedAt},
+            deleted_at = #{deletedAt},
+            version = version + 1
+        WHERE id = #{id} and version = #{version}
     </update>
 
-    <update id="delete" parameterType="Long">
-        UPDATE permission_groups
-        SET deleted_at = UNIX_TIMESTAMP(NOW(3)) * 1000
-        WHERE id = #{id}
-          and deleted_at = 0
+    <update id="delete" parameterType="FeaturePo">
+        UPDATE features
+        SET deleted_at = #{deletedAt},
+        version = version + 1
+        WHERE id = #{id} and version = #{version}
     </update>
 
     <sql id="condition">
@@ -34,15 +38,21 @@
             <if test="parentId != null">
                 AND parent_id = #{parentId}
             </if>
-            <if test="groupName != null">
-                AND group_name = #{groupName}
+            <if test="featureName != null">
+                AND feature_name = #{featureName}
             </if>
             <if test="displayName != null">
                 AND display_name = #{displayName}
             </if>
             <if test="keywords != null">
-                AND (group_name LIKE CONCAT('%', #{keywords}, '%')
+                AND (feature_name LIKE CONCAT('%', #{keywords}, '%')
                 OR display_name LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="configurable != null and configurable == true">
+                AND configurable = 1
+            </if>
+            <if test="configurable != null and configurable == false">
+                AND configurable = 0
             </if>
             <if test="deleted != null and deleted == true">
                 AND deleted_at > 0
@@ -55,19 +65,19 @@
 
     <select id="findIdByCondition" parameterType="Map" resultType="Long">
         SELECT id
-        FROM permission_groups
+        FROM features
         <include refid="condition"/>
     </select>
 
     <select id="count" parameterType="Map" resultType="Long">
         SELECT count(*)
-        FROM permission_groups
+        FROM features
         <include refid="condition"/>
     </select>
 
-    <select id="search" parameterType="Map" resultType="PermissionGroupPo">
-        SELECT id, parent_id, group_name, display_name, description, created_at, updated_at, deleted_at
-        FROM permission_groups
+    <select id="search" parameterType="Map" resultType="FeaturePo">
+        SELECT *
+        FROM features
         <include refid="condition"/>
         ORDER BY
         <choose>

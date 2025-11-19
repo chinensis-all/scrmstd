@@ -19,7 +19,7 @@ package com.mayanshe.scrmstd.application.generic.listener;
 
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.generic.command.CreateContactCommand;
-import com.mayanshe.scrmstd.application.tentant.listener.TenantCreatedListener;
+import com.mayanshe.scrmstd.application.tenant.listener.TenantCreatedListener;
 import com.mayanshe.scrmstd.domain.boss.admin.event.BossAdminCreatedEvent;
 import com.mayanshe.scrmstd.domain.boss.admin.event.BossAdminModifiedEvent;
 import com.mayanshe.scrmstd.tenant.identity.event.AdminCreatedEvent;

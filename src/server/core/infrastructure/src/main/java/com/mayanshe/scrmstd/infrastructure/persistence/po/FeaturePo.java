@@ -15,28 +15,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.bossapi.requests;
+package com.mayanshe.scrmstd.infrastructure.persistence.po;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
+/**
+ * FeaturePo: 功能信息持久化对象
+ */
 @Getter
 @Setter
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePermissionGroupRequest {
-    private String parentId;
+public class FeaturePo {
+    private Long id;
 
-    @NotBlank(message = "权限组名称不能为空")
-    @Size(min = 2, max = 100, message = "权限组名称长度必须在2到100个字符之间")
-    private String groupName;
+    private Long parentId;
 
-    @NotBlank(message = "显示名称不能为空")
-    @Size(min = 2, max = 100, message = "显示名称长度必须在2到100个字符之间")
+    private String featureName;
+
     private String displayName;
 
-    @Size(max = 255, message = "权限组描述长度不能超过255个字符")
     private String description;
+
+    private Byte configurable;
+
+    @Builder.Default
+    private Long createdAt = 0L;
+
+    @Builder.Default
+    private Long updatedAt = 0L;
+
+    @Builder.Default
+    private Long deletedAt = 0L;
+
+    @Builder.Default
+    private Long version = 0L;
 }
