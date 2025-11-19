@@ -42,12 +42,23 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
         this.mapper = mapper;
     }
 
+    /**
+     * 加载权限组聚合根
+     *
+     * @param id 主键
+     * @return   权限组聚合根对象
+     */
     @Override
     public Optional<PermissionGroup> load(Long id) {
         PermissionGroupPo po = getPo(id);
         return Optional.ofNullable(po == null ? null : PermissionGroupConverter.INSTANCE.toAggregate(po));
     }
 
+    /**
+     * 保存权限组聚合根
+     *
+     * @param aggregate 聚合根对象
+     */
     @Override
     @Transactional
     @SaveDomainEvents
@@ -75,6 +86,11 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
         }
     }
 
+    /**
+     * 验证权限组冲突
+     *
+     * @param aggregate 权限组聚合根
+     */
     private void verifyConflict(PermissionGroup aggregate) {
         Long groupNameExistId = mapper.findIdByCondition(Map.of("groupName", aggregate.getGroupName()));
         if (groupNameExistId != null && !groupNameExistId.equals(aggregate.getId().id())) {
@@ -94,6 +110,12 @@ public class PermissionGroupRepositoryImpl implements PermissionGroupRepository 
         }
     }
 
+    /**
+     * 获取权限组PO
+     *
+     * @param id 权限组ID
+     * @return   权限组PO
+     */
     private PermissionGroupPo getPo(Long id) {
         if (id == null || id <= 0) {
             return null;

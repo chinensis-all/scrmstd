@@ -48,4 +48,20 @@ public interface BaseConverter {
     default boolean deletedAtToDeleted(Long deletedAt) {
         return deletedAt != null && deletedAt > 0;
     }
+
+    @Named("booleanToByte")
+    default Byte booleanToByte(Boolean value) {
+        if (value == null) {
+            return 0;
+        }
+        return (byte) (value ? 1 : 0);
+    }
+
+    @Named("byteToBoolean")
+    default Boolean byteToBoolean(Byte value) {
+        if (value == null) {
+            return false;
+        }
+        return value != 0;
+    }
 }

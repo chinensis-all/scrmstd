@@ -15,28 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.bossapi.requests;
+package com.mayanshe.scrmstd.tenant.subscription.event;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+/**
+ * DestroyFeatureEvent: 启用Saas功能点成功事件
+ */
 @Getter
 @Setter
-@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePermissionGroupRequest {
-    private String parentId;
-
-    @NotBlank(message = "权限组名称不能为空")
-    @Size(min = 2, max = 100, message = "权限组名称长度必须在2到100个字符之间")
-    private String groupName;
-
-    @NotBlank(message = "显示名称不能为空")
-    @Size(min = 2, max = 100, message = "显示名称长度必须在2到100个字符之间")
-    private String displayName;
-
-    @Size(max = 255, message = "权限组描述长度不能超过255个字符")
-    private String description;
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = false)
+public class ActivateFeatureEvent extends DomainEvent {
+    private AggregateId featureId;    // 功能点ID
 }

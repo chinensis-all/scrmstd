@@ -19,7 +19,7 @@ package com.mayanshe.scrmstd.application.message.listener;
 
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.message.command.CreateEmailLogCommand;
-import com.mayanshe.scrmstd.application.tentant.listener.TenantCreatedListener;
+import com.mayanshe.scrmstd.application.tenant.listener.TenantCreatedListener;
 import com.mayanshe.scrmstd.message.send.event.EmailSendFailedEvent;
 import com.mayanshe.scrmstd.message.send.event.EmailSentEvent;
 import org.slf4j.Logger;

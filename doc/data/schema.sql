@@ -249,6 +249,23 @@ CREATE TABLE IF NOT EXISTS `email_logs`
     INDEX `idx_tenant_id` (`tenant_id`) USING BTREE COMMENT '租户ID索引'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 COMMENT='邮件发送日志表';
 
+DROP TABLE IF EXISTS `features`;
+CREATE TABLE IF NOT EXISTS `features` (
+    `id`              BIGINT UNSIGNED     NOT NULL COMMENT '主键ID',
+    `parent_id`       BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '父功能ID，0表示顶级功能',
+    `feature_name`    VARCHAR(100)        NOT NULL COMMENT '功能名称',
+    `display_name`    VARCHAR(100)        NOT NULL COMMENT '显示名称',
+    `description`     TEXT                NOT NULL COMMENT '功能描述',
+    `configurable`    TINYINT(1) UNSIGNED NOT NULL DEFAULT 1 COMMENT '是否可配置（0-否:每个租户都有的，1-是）',
+    `created_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `updated_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '更新时间',
+    `deleted_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '软删除时间',
+    `version`         BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+    PRIMARY KEY (`id`),
+    INDEX `idx_parent_id` (`parent_id`) COMMENT '父功能ID索引',
+    UNIQUE KEY `uk_feature_name` (`feature_name`) COMMENT '功能名称唯一索引'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Sass系统功能表';
+
 DROP TABLE IF EXISTS `permission_groups`;
 CREATE TABLE IF NOT EXISTS `permission_groups`
 (
@@ -263,16 +280,15 @@ CREATE TABLE IF NOT EXISTS `permission_groups`
     UNIQUE KEY `uk_group_name` (`group_name`) USING BTREE COMMENT '权限组名称唯一索引'
 ) ENGINE=InnoDB COMMENT 'SAAS系统权限组表';
 
-DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE IF NOT EXISTS `permissions`
+DROP TABLE IF EXISTS permissions;
+CREATE TABLE IF NOT EXISTS permissions
 (
-    `id`              BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-    `group_id`        BIGINT UNSIGNED     NOT NULL COMMENT '权限组ID，关联permission_groups表',
-    `permission_name` VARCHAR(100)        NOT NULL COMMENT '权限名称',
-    `display_name`    VARCHAR(100)        NOT NULL COMMENT '显示名称',
-    `description`     VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '权限描述',
-    `created_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '创建时间',
-    `updated_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '更新时间',
-    `deleted_at`      BIGINT UNSIGNED     NOT NULL DEFAULT 0 COMMENT '软删除时间',
-    UNIQUE KEY `uk_permission_name` (`permission_name`) USING BTREE COMMENT '权限名称唯一索引'
+    id                 BIGINT UNSIGNED    NOT NULL PRIMARY KEY COMMENT '主键ID',
+    group_id BIGINT    UNSIGNED           NOT NULL COMMENT '权限组ID，关联permission_groups表',
+    permission_name    VARCHAR(100)       NOT NULL COMMENT '权限名称',
+    display_name       VARCHAR(100)       NOT NULL COMMENT '显示名称',
+    description        VARCHAR(255)       NOT NULL DEFAULT '' COMMENT '权限描述',
+    created_at         BIGINT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '创建时间',
+    updated_at         BIGINT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '更新时间',
+    UNIQUE KEY uk_permission_name (permission_name) USING BTREE COMMENT '权限名称唯一索引'
 ) ENGINE=InnoDB COMMENT 'SAAS系统权限表';
