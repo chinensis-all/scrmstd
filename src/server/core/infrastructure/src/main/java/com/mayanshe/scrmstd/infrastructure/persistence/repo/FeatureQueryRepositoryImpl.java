@@ -18,8 +18,8 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tenant.query.repo.FeatureQueryRepository;
-import com.mayanshe.scrmstd.application.tenant.query.dto.FeatureDto;
+import com.mayanshe.scrmstd.application.platform.query.repo.FeatureQueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.FeatureDto;
 import com.mayanshe.scrmstd.infrastructure.external.converter.FeatureConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
