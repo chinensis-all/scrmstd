@@ -18,8 +18,8 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.application.tenant.query.repo.PermissionGroupQueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.PermissionGroupDto;
+import com.mayanshe.scrmstd.application.platform.query.repo.PermissionGroupQueryRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionGroupConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionGroupMapper;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;

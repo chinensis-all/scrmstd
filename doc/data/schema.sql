@@ -280,8 +280,8 @@ CREATE TABLE IF NOT EXISTS `permission_groups`
     UNIQUE KEY `uk_group_name` (`group_name`) USING BTREE COMMENT '权限组名称唯一索引'
 ) ENGINE=InnoDB COMMENT 'SAAS系统权限组表';
 
-DROP TABLE IF EXISTS permissions;
-CREATE TABLE IF NOT EXISTS permissions
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions`
 (
     id                 BIGINT UNSIGNED    NOT NULL PRIMARY KEY COMMENT '主键ID',
     group_id BIGINT    UNSIGNED           NOT NULL COMMENT '权限组ID，关联permission_groups表',
@@ -292,3 +292,39 @@ CREATE TABLE IF NOT EXISTS permissions
     updated_at         BIGINT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '更新时间',
     UNIQUE KEY uk_permission_name (permission_name) USING BTREE COMMENT '权限名称唯一索引'
 ) ENGINE=InnoDB COMMENT 'SAAS系统权限表';
+
+DROP TABLE IF EXISTS `menus`;
+CREATE TABLE IF NOT EXISTS `menus`
+(
+    `id`                        BIGINT UNSIGNED    NOT NULL PRIMARY KEY COMMENT '主键',
+    `parent_id`                 BIGINT UNSIGNED    DEFAULT 0 COMMENT '父级菜单ID, 0 为顶级',
+
+    `kind`                      TINYINT(1)         NOT NULL DEFAULT 1 COMMENT '菜单类型：1=菜单 2=按钮/权限点',
+
+    `name`                      VARCHAR(100)       NOT NULL DEFAULT '' COMMENT '路由名称（唯一）',
+    `title`                     VARCHAR(100)       NOT NULL DEFAULT '' COMMENT '菜单名称（显示名）',
+    `path`                      VARCHAR(255)       NOT NULL DEFAULT '' COMMENT '前端路由路径',
+    `redirect`                  VARCHAR(255)       NOT NULL DEFAULT '' COMMENT '路由重定向',
+    `component`                 VARCHAR(255)       NOT NULL DEFAULT '' COMMENT '组件路径，例如: views/home/index.vue',
+
+    `icon`                      VARCHAR(50)        NOT NULL DEFAULT '' COMMENT '图标（Arco Icon 名称）',
+    `sort`                      INT(8)             NOT NULL DEFAULT 0 COMMENT '排序（升序）',
+
+    `is_external`               TINYINT(1)         NOT NULL DEFAULT 0 COMMENT '是否外链：0=否 1=是',
+    `external_link`             VARCHAR(255)       NOT NULL DEFAULT '' COMMENT '外链地址',
+    `keep_alive`                TINYINT(1)         NOT NULL DEFAULT 0 COMMENT '是否缓存页面 keepAlive',
+    `hide_in_menu`              TINYINT(1)         NOT NULL DEFAULT 0 COMMENT '是否在菜单隐藏',
+    `hide_children_in_menu`     TINYINT(1)         NOT NULL DEFAULT 0 COMMENT '是否隐藏子菜单',
+    `requires_auth`             TINYINT(1)         NOT NULL DEFAULT 1 COMMENT '是否需要权限',
+
+    `permission`                VARCHAR(100)       NOT NULL DEFAULT '' COMMENT '按钮权限标识，比如 system:menu:add',
+
+    `status`                    TINYINT(1)         NOT NULL DEFAULT 1 COMMENT '状态：1=启用 0=禁用',
+    `remark`                    VARCHAR(500)       NOT NULL DEFAULT '' COMMENT '备注',
+
+    created_at                  BIGINT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '创建时间',
+    updated_at                  BIGINT UNSIGNED    NOT NULL DEFAULT 0 COMMENT '更新时间',
+
+    KEY `idx_parent_id` (`parent_id`) USING BTREE COMMENT '父级菜单索引',
+    UNIQUE KEY `uk_menu_name` (`name`) USING BTREE COMMENT '路由名称唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台菜单表';

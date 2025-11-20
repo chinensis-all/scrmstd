@@ -23,8 +23,8 @@ import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo;
 import com.mayanshe.scrmstd.shared.annotation.SaveDomainEvents;
 import com.mayanshe.scrmstd.shared.exception.InternalServerException;
 import com.mayanshe.scrmstd.shared.exception.RequestConflictException;
-import com.mayanshe.scrmstd.tenant.identity.model.Permission;
-import com.mayanshe.scrmstd.tenant.identity.repo.PermissionRepository;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
+import com.mayanshe.scrmstd.platform.identity.repo.PermissionRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

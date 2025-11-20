@@ -18,9 +18,9 @@
 package com.mayanshe.scrmstd.infrastructure.external.converter;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.tenant.query.dto.PermissionDto;
+import com.mayanshe.scrmstd.application.platform.query.dto.PermissionDto;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo;
-import com.mayanshe.scrmstd.tenant.identity.model.Permission;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

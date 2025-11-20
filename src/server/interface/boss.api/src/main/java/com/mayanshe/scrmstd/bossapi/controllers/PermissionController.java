@@ -19,12 +19,12 @@ package com.mayanshe.scrmstd.bossapi.controllers;
 
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.QueryBus;
-import com.mayanshe.scrmstd.application.tenant.command.CreatePermissionCommand;
-import com.mayanshe.scrmstd.application.tenant.command.DeletePermissionCommand;
-import com.mayanshe.scrmstd.application.tenant.command.ModifyPermissionCommand;
-import com.mayanshe.scrmstd.application.tenant.query.PermissionDetailQuery;
-import com.mayanshe.scrmstd.application.tenant.query.PermissionOptionQuery;
-import com.mayanshe.scrmstd.application.tenant.query.PermissionPaginationQuery;
+import com.mayanshe.scrmstd.application.platform.command.CreatePermissionCommand;
+import com.mayanshe.scrmstd.application.platform.command.DeletePermissionCommand;
+import com.mayanshe.scrmstd.application.platform.command.ModifyPermissionCommand;
+import com.mayanshe.scrmstd.application.platform.query.PermissionDetailQuery;
+import com.mayanshe.scrmstd.application.platform.query.PermissionOptionQuery;
+import com.mayanshe.scrmstd.application.platform.query.PermissionPaginationQuery;
 import com.mayanshe.scrmstd.bossapi.requests.CreatePermissionRequest;
 import com.mayanshe.scrmstd.bossapi.requests.ModifyPermissionRequest;
 import com.mayanshe.scrmstd.shared.contract.IdGenerator;
