@@ -35,6 +35,11 @@
             <artifactId>scrmstd-core-domain-tenant</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.mayanshe</groupId>
+            <artifactId>scrmstd-core-domain-platform</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

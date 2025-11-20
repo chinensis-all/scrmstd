@@ -18,8 +18,8 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.shared.annotation.SaveDomainEvents;
-import com.mayanshe.scrmstd.tenant.subscription.model.Feature;
-import com.mayanshe.scrmstd.tenant.subscription.repo.FeatureRepository;
+import com.mayanshe.scrmstd.platform.subscription.model.Feature;
+import com.mayanshe.scrmstd.platform.subscription.repo.FeatureRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.FeatureConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
