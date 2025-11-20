@@ -15,13 +15,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.infrastructure.persistence.po;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import lombok.*;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionPo: 权限持久化对象
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+@Getter
+@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class PermissionPo {
+    private Long id;              // 主键ID
+
+    private Long groupId;       // 权限组ID
+
+    private String permissionName;     // 权限名称
+
+    private String displayName;   // 显示名称
+
+    private String description;   // 权限描述
+
+    @Builder.Default
+    private Long createdAt = 0L;  // 创建时间
+
+    @Builder.Default
+    private Long updatedAt = 0L;  // 更新时间
 }

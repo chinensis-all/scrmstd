@@ -19,45 +19,34 @@ package com.mayanshe.scrmstd.application.platform.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.platform.command.CreatePermissionGroupCommand;
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
-import com.mayanshe.scrmstd.shared.model.AggregateId;
-import com.mayanshe.scrmstd.platform.identity.model.PermissionGroup;
-import com.mayanshe.scrmstd.platform.identity.repo.PermissionGroupRepository;
+import com.mayanshe.scrmstd.application.platform.command.DeletePermissionCommand;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
+import com.mayanshe.scrmstd.platform.identity.repo.PermissionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * CreatePermissionGroupHandler: 创建权限组命令处理器
+ * DeletePermissionCommandHandler: 删除权限命令处理器
  */
 @Service
-public class CreatePermissionGroupHandler implements CommandHandler<CreatePermissionGroupCommand, Long> {
-    private final IdGenerator idGenerator;
+public class DeletePermissionCommandHandler implements CommandHandler<DeletePermissionCommand, Boolean> {
     private final DomainEventPublisher publisher;
-    private final PermissionGroupRepository repository;
+    private final PermissionRepository repository;
 
-    public CreatePermissionGroupHandler(IdGenerator idGenerator, DomainEventPublisher publisher, PermissionGroupRepository repository) {
-        this.idGenerator = idGenerator;
+    public DeletePermissionCommandHandler(DomainEventPublisher publisher, PermissionRepository repository) {
         this.publisher = publisher;
         this.repository = repository;
     }
 
     @Override
     @Transactional
-    public Long handle(CreatePermissionGroupCommand command) {
-        long id = idGenerator.nextId();
-
-        PermissionGroup aggregate = new PermissionGroup();
-        aggregate.setId(new AggregateId(id, true));
-        aggregate.setParentId(command.parentId());
-        aggregate.setGroupName(command.groupName());
-        aggregate.setDisplayName(command.displayName());
-        aggregate.setDescription(command.description());
-        aggregate.create();
+    public Boolean handle(DeletePermissionCommand command) {
+        Permission aggregate = repository.load(command.id()).orElseThrow(() -> new IllegalArgumentException("权限不存在, ID=" + command.id()));
+        aggregate.delete();
 
         repository.save(aggregate);
         publisher.confirm(aggregate.getEvents());
 
-        return id;
+        return true;
     }
 }

@@ -18,9 +18,9 @@
 package com.mayanshe.scrmstd.infrastructure.external.converter;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.platform.query.dto.PermissionGroupDto;
-import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionGroupPo;
-import com.mayanshe.scrmstd.platform.identity.model.PermissionGroup;
+import com.mayanshe.scrmstd.application.platform.query.dto.PermissionDto;
+import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -28,37 +28,38 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
+/**
+ * PermissionConverter: 权限转换器
+ */
 @Mapper(componentModel = "spring")
 @Component
-public interface PermissionGroupConverter extends BaseConverter {
-    PermissionGroupConverter INSTANCE = Mappers.getMapper(PermissionGroupConverter.class);
+public interface PermissionConverter extends BaseConverter {
+    PermissionConverter INSTANCE = Mappers.getMapper(PermissionConverter.class);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "deletedAt", source = "deleted", qualifiedByName = "deletedToDeletedAt"),
     })
-    PermissionGroupPo toPo(PermissionGroup aggregate);
+    PermissionPo toPo(Permission aggregate);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "deletedAt", source = "deleted", qualifiedByName = "deletedToDeletedAt"),
     })
-    PermissionGroupPo updatePo(PermissionGroup aggregate, @MappingTarget PermissionGroupPo po);
+    PermissionPo updatePo(Permission aggregate, @MappingTarget PermissionPo po);
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "idToAggregateId"),
-            @Mapping(target = "deleted", source = "deletedAt", qualifiedByName = "deletedAtToDeleted"),
     })
-    PermissionGroup toAggregate(PermissionGroupPo po);
+    Permission toAggregate(PermissionPo po);
 
     @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))")
-    PermissionGroupDto toDto(PermissionGroupPo po);
+    @Mapping(target = "groupId", expression = "java(String.valueOf(po.getGroupId()))")
+    PermissionDto toDto(PermissionPo po);
 
     @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))")
     @Mapping(target = "name", source = "displayName")
-    OptionDto toOptionDto(PermissionGroupPo po);
+    OptionDto toOptionDto(PermissionPo po);
 }

@@ -21,8 +21,8 @@ import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
 import com.mayanshe.scrmstd.application.platform.command.DestroyFeatureCommand;
 import com.mayanshe.scrmstd.shared.exception.ResourceNotFoundException;
-import com.mayanshe.scrmstd.tenant.subscription.model.Feature;
-import com.mayanshe.scrmstd.tenant.subscription.repo.FeatureRepository;
+import com.mayanshe.scrmstd.platform.subscription.model.Feature;
+import com.mayanshe.scrmstd.platform.subscription.repo.FeatureRepository;
 import org.springframework.stereotype.Component;
 
 /**

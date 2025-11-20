@@ -19,24 +19,24 @@ package com.mayanshe.scrmstd.application.platform.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.platform.command.CreatePermissionGroupCommand;
+import com.mayanshe.scrmstd.application.platform.command.CreatePermissionCommand;
 import com.mayanshe.scrmstd.shared.contract.IdGenerator;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
-import com.mayanshe.scrmstd.platform.identity.model.PermissionGroup;
-import com.mayanshe.scrmstd.platform.identity.repo.PermissionGroupRepository;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
+import com.mayanshe.scrmstd.platform.identity.repo.PermissionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * CreatePermissionGroupHandler: 创建权限组命令处理器
+ * CreatePermissionCommandHandler: 创建权限命令处理器
  */
 @Service
-public class CreatePermissionGroupHandler implements CommandHandler<CreatePermissionGroupCommand, Long> {
+public class CreatePermissionCommandHandler implements CommandHandler<CreatePermissionCommand, Long> {
     private final IdGenerator idGenerator;
     private final DomainEventPublisher publisher;
-    private final PermissionGroupRepository repository;
+    private final PermissionRepository repository;
 
-    public CreatePermissionGroupHandler(IdGenerator idGenerator, DomainEventPublisher publisher, PermissionGroupRepository repository) {
+    public CreatePermissionCommandHandler(IdGenerator idGenerator, DomainEventPublisher publisher, PermissionRepository repository) {
         this.idGenerator = idGenerator;
         this.publisher = publisher;
         this.repository = repository;
@@ -44,13 +44,13 @@ public class CreatePermissionGroupHandler implements CommandHandler<CreatePermis
 
     @Override
     @Transactional
-    public Long handle(CreatePermissionGroupCommand command) {
+    public Long handle(CreatePermissionCommand command) {
         long id = idGenerator.nextId();
 
-        PermissionGroup aggregate = new PermissionGroup();
+        Permission aggregate = new Permission();
         aggregate.setId(new AggregateId(id, true));
-        aggregate.setParentId(command.parentId());
-        aggregate.setGroupName(command.groupName());
+        aggregate.setGroupId(command.groupId());
+        aggregate.setPermissionName(command.permissionName());
         aggregate.setDisplayName(command.displayName());
         aggregate.setDescription(command.description());
         aggregate.create();

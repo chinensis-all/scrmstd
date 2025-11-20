@@ -49,7 +49,7 @@
 - {持久化Mapper路径} ： `src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/persistence/mapper`
 - {转换器路径} ： `src/server/core/infrastructure/src/main/java/com/mayanshe/scrmstd/infrastructure/external/converter/`
 - {领域项目路径} ： `src/server/core/domain/tenant/src/main/java/com/mayanshe/scrmstd/{领域}`
-- {领域上下文路径} ：`{领域路径}/{上下文}`
+- {领域上下文路径} ：`{领域项目路径}/{上下文}`
 - {领域上下文聚合根路径} ： `{领域上下文路径}/model`
 - {领域上下文事件路径} ： `{领域上下文路径}/event`
 - {领域上下文仓储接口路径} ： `{领域上下文路径}/repo`
@@ -373,7 +373,7 @@
 - 没个Java文件都至少有两个注释，一个在头部用于声明版权，一个在类（注解）的上部，包含类名和功能；
 - 不要import项目中不存在的文件，不要使用项目中不存在的文件；
 - 本项目使用的DDD + CQRS + 多模块的开发范式，请知悉。
-- 提交分名字名为`feature-{表}`，将其中的下划线改为中划-。
+- 提交分名字名为`feature-{表}-crud`，将其中的下划线改为中划-。
 - 如果你觉得本提示文档哪里有不清楚的地方，请向我提问，并修改本文档为更清晰的你容易理解的文档，修改时考虑后续的模板示例（只需要少量的改动，就可以形成新的Agent，如果没有，继续你的工作，列出开发计划。
 
 

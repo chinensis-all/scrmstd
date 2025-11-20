@@ -17,7 +17,7 @@
 package com.mayanshe.scrmstd.platform.identity.repo;
 
 import com.mayanshe.scrmstd.shared.contract.DomainRepository;
-import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
+import com.mayanshe.scrmstd.platform.identity.model.PermissionGroup;
 
 /**
  * PermissionGroupRepository: 权限组仓储接口

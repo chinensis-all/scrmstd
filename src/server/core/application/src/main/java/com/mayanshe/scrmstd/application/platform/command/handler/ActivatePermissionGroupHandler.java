@@ -20,8 +20,8 @@ package com.mayanshe.scrmstd.application.platform.command.handler;
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
 import com.mayanshe.scrmstd.application.platform.command.ActivatePermissionGroupCommand;
-import com.mayanshe.scrmstd.tenant.identity.model.PermissionGroup;
-import com.mayanshe.scrmstd.tenant.identity.repo.PermissionGroupRepository;
+import com.mayanshe.scrmstd.platform.identity.model.PermissionGroup;
+import com.mayanshe.scrmstd.platform.identity.repo.PermissionGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

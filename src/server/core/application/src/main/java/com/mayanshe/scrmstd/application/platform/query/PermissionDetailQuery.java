@@ -15,13 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.application.platform.query;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.platform.query.dto.PermissionDto;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionDetailQuery: 查询权限详情
+ *
+ * @param id 权限ID
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+public record PermissionDetailQuery(
+        Long id
+) implements Query<PermissionDto> {
 }

@@ -15,13 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.application.platform.command;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.application.Command;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * ModifyPermissionCommand: 修改权限命令
+ *
+ * @param id              权限ID
+ * @param groupId         权限组ID
+ * @param permissionName  权限名称
+ * @param displayName     权限显示名称
+ * @param description     权限描述
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+public record ModifyPermissionCommand(
+        Long id,
+        Long groupId,
+        String permissionName,
+        String displayName,
+        String description
+) implements Command<Boolean> {
 }

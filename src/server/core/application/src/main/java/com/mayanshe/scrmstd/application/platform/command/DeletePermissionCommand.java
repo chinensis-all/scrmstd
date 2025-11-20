@@ -15,22 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.tenant.identity.event;
+package com.mayanshe.scrmstd.application.platform.command;
 
-import com.mayanshe.scrmstd.shared.base.DomainEvent;
-import com.mayanshe.scrmstd.shared.model.AggregateId;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.mayanshe.scrmstd.application.Command;
 
 /**
- * ActivatePermissionGroupEvent: 激活权限组领域事件
+ * DeletePermissionCommand: 删除权限命令
+ *
+ * @param id 权限ID
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-@ToString(callSuper = false)
-public class ActivatePermissionGroupEvent extends DomainEvent {
-    private AggregateId permissionGroupId;
+public record DeletePermissionCommand(
+        Long id
+) implements Command<Boolean> {
 }

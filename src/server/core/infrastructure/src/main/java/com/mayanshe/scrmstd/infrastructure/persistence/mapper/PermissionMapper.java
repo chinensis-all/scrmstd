@@ -15,13 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.infrastructure.persistence.mapper;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.Map;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionMapper: 权限Mapper接口
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+@Mapper
+public interface PermissionMapper extends PaginateMapper<PermissionPo> {
+    long insert(PermissionPo po);
+
+    long update(PermissionPo po);
+
+    Long delete(Long id);
+
+    PermissionPo findById(Long id);
+
+    Long findIdByCondition(Map<String, Object> criteria);
 }

@@ -15,13 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.application.platform.query;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.platform.query.dto.PermissionDto;
+import com.mayanshe.scrmstd.shared.model.Pagination;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionPaginationQuery: 查询权限分页列表
+ *
+ * @param groupId  权限组ID
+ * @param keywords  关键字
+ * @param page      页码
+ * @param pageSize  每页大小
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+public record PermissionPaginationQuery(
+        Long groupId,
+        String keywords,
+        Long page,
+        Long pageSize
+) implements Query<Pagination<PermissionDto>> {
 }

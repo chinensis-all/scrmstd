@@ -15,13 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.platform.identity.event;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionCreatedEvent: 创建权限领域事件
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = false)
+public class PermissionCreatedEvent extends DomainEvent {
+    private AggregateId permissionId;
+
+    private Long groupId;
+
+    private String permissionName;
+
+    private String displayName;
+
+    private String description;
 }

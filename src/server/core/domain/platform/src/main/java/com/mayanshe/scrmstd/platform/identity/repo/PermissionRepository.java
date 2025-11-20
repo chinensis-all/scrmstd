@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.platform.identity.repo;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
 import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import com.mayanshe.scrmstd.platform.identity.model.Permission;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * PermissionRepository: 权限仓储接口
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
+public interface PermissionRepository extends DomainRepository<Permission, Long> {
 }

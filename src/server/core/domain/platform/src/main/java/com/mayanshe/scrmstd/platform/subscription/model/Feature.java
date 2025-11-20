@@ -19,10 +19,10 @@ package com.mayanshe.scrmstd.platform.subscription.model;
 
 import com.mayanshe.scrmstd.shared.exception.BadRequestException;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
-import com.mayanshe.scrmstd.tenant.subscription.event.ActivateFeatureEvent;
-import com.mayanshe.scrmstd.tenant.subscription.event.CreateFeatureEvent;
-import com.mayanshe.scrmstd.tenant.subscription.event.DestroyFeatureEvent;
-import com.mayanshe.scrmstd.tenant.subscription.event.ModifyFeatureEvent;
+import com.mayanshe.scrmstd.platform.subscription.event.ActivateFeatureEvent;
+import com.mayanshe.scrmstd.platform.subscription.event.CreateFeatureEvent;
+import com.mayanshe.scrmstd.platform.subscription.event.DestroyFeatureEvent;
+import com.mayanshe.scrmstd.platform.subscription.event.ModifyFeatureEvent;
 import com.mayanshe.scrmstd.shared.base.Aggregate;
 import lombok.*;
 

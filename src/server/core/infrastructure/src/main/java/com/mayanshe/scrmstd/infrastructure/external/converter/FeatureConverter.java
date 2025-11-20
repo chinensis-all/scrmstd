@@ -19,7 +19,7 @@ package com.mayanshe.scrmstd.infrastructure.external.converter;
 
 import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.platform.query.dto.FeatureDto;
-import com.mayanshe.scrmstd.tenant.subscription.model.Feature;
+import com.mayanshe.scrmstd.platform.subscription.model.Feature;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
