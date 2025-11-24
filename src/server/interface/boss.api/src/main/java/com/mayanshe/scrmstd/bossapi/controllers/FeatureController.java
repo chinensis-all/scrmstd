@@ -21,15 +21,13 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.QueryBus;
-import com.mayanshe.scrmstd.application.platform.command.ActivateFeatureCommand;
-import com.mayanshe.scrmstd.application.platform.command.CreateFeatureCommand;
-import com.mayanshe.scrmstd.application.platform.command.DestroyFeatureCommand;
-import com.mayanshe.scrmstd.application.platform.command.ModifyFeatureCommand;
+import com.mayanshe.scrmstd.application.platform.command.*;
 import com.mayanshe.scrmstd.application.platform.query.FeatureDetailQuery;
 import com.mayanshe.scrmstd.application.platform.query.FeatureOptionQuery;
 import com.mayanshe.scrmstd.application.platform.query.FeaturePaginationQuery;
 import com.mayanshe.scrmstd.application.platform.query.dto.FeatureDto;
 import com.mayanshe.scrmstd.bossapi.requests.CreateFeatureRequest;
+import com.mayanshe.scrmstd.bossapi.requests.ModifyFeaturePermissionsRequest;
 import com.mayanshe.scrmstd.bossapi.requests.ModifyFeatureRequest;
 import com.mayanshe.scrmstd.shared.contract.IdGenerator;
 import com.mayanshe.scrmstd.shared.model.IDResponse;
@@ -39,6 +37,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * FeatureController: 功能点控制器
@@ -101,9 +100,7 @@ public class FeatureController {
     @PostMapping("/{id}/lock")
     @SaCheckLogin
     public void destroyFeature(@PathVariable("id") String id) {
-        commandBus.execute(new DestroyFeatureCommand(
-                IdGenerator.fromBase62(id)
-        ));
+        commandBus.execute(new DestroyFeatureCommand(IdGenerator.fromBase62(id)));
     }
 
     /**
@@ -114,16 +111,14 @@ public class FeatureController {
     @DeleteMapping("/{id}/lock")
     @SaCheckLogin
     public void activateFeature(@PathVariable("id") String id) {
-        commandBus.execute(new ActivateFeatureCommand(
-                IdGenerator.fromBase62(id)
-        ));
+        commandBus.execute(new ActivateFeatureCommand(IdGenerator.fromBase62(id)));
     }
 
     /**
      * 获取功能点详情
      *
      * @param id 功能点ID
-     * @return   功能点详情
+     * @return 功能点详情
      */
     @GetMapping("/{id}")
     @SaCheckLogin
@@ -140,13 +135,11 @@ public class FeatureController {
      */
     @GetMapping("/options")
     @SaCheckLogin
-    public List<OptionDto> getFeatureOptions(
-            @RequestParam(value = "parentId", required = false) String parentId,
-            @RequestParam(value = "keywords", required = false) String keywords
-    ) {
+    public List<OptionDto> getFeatureOptions(@RequestParam(value = "parentId", required = false) String parentId, @RequestParam(value = "keywords", required = false) String keywords) {
         return queryBus.execute(new FeatureOptionQuery(
                 parentId == null || parentId.isBlank() ? 0L : IdGenerator.fromBase62(parentId),
-                keywords, false
+                keywords,
+                false
         ));
     }
 
@@ -159,25 +152,30 @@ public class FeatureController {
      * @param deleted      是否删除
      * @param page         页码
      * @param pageSize     分页大小
-     * @return             Saas功能点分页
+     * @return Saas功能点分页
      */
     @GetMapping
     @SaCheckLogin
-    public Pagination<FeatureDto> getFeaturePagination(
-            @RequestParam(value = "parentId", required = false) String parentId,
-            @RequestParam(value = "keywords", required = false) String keywords,
-            @RequestParam(value = "configurable", required = false) Boolean configurable,
-            @RequestParam(value = "deleted", required = false) Boolean deleted,
-            @RequestParam(value = "page", required = false, defaultValue = "1") Long page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "20") Long pageSize
-    ) {
+    public Pagination<FeatureDto> getFeaturePagination(@RequestParam(value = "parentId", required = false) String parentId, @RequestParam(value = "keywords", required = false) String keywords, @RequestParam(value = "configurable", required = false) Boolean configurable, @RequestParam(value = "deleted", required = false) Boolean deleted, @RequestParam(value = "page", required = false, defaultValue = "1") Long page, @RequestParam(value = "pageSize", required = false, defaultValue = "20") Long pageSize) {
         return queryBus.execute(new FeaturePaginationQuery(
                 parentId == null || parentId.isBlank() ? 0L : IdGenerator.fromBase62(parentId),
                 keywords,
                 configurable,
                 deleted,
-                page,
-                pageSize
+                page, pageSize
         ));
+    }
+
+    /**
+     * 修改功能点权限关联
+     *
+     * @param id      功能点ID
+     * @param request 修改请求
+     */
+    @PutMapping("/{id}/permissions")
+    public void modifyFeaturePermissions(@PathVariable("id") String id, @Valid @RequestBody ModifyFeaturePermissionsRequest request) {
+        Set<Long> permissionIds = request.getPermissionIds() == null || request.getPermissionIds().isEmpty() ? Set.of() :
+                request.getPermissionIds().stream().map(IdGenerator::fromBase62).collect(java.util.stream.Collectors.toSet());
+        commandBus.execute(new ModifyFeaturePermissionsCommand(IdGenerator.fromBase62(id), permissionIds));
     }
 }

@@ -328,3 +328,12 @@ CREATE TABLE IF NOT EXISTS `menus`
     KEY `idx_parent_id` (`parent_id`) USING BTREE COMMENT '父级菜单索引',
     UNIQUE KEY `uk_menu_name` (`name`) USING BTREE COMMENT '路由名称唯一索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台菜单表';
+
+DROP TABLE IF EXISTS `feature_permissions`;
+CREATE TABLE IF NOT EXISTS `feature_permissions`
+(
+    `feature_id`        BIGINT UNSIGNED     NOT NULL COMMENT '功能ID，关联features表',
+    `permission_id`     BIGINT UNSIGNED     NOT NULL COMMENT '菜单ID，关联permissions表',
+    PRIMARY KEY (`feature_id`, `permission_id`) USING BTREE,
+    INDEX `idx_permission_id` (`permission_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Saas功能点关联权限表';

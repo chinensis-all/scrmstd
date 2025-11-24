@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.event;
+package com.mayanshe.scrmstd.platform.identity.event;
 
 import com.mayanshe.scrmstd.shared.base.DomainEvent;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
@@ -23,7 +23,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
- * DestroyFeatureEvent: 启用Saas功能点成功事件
+ * CreatePermissionGroupEvent: 创建权限组领域事件
  */
 @Getter
 @Setter
@@ -31,6 +31,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = false)
-public class ActivateFeatureEvent extends DomainEvent {
-    private AggregateId featureId;    // 功能点ID
+public class PermissionGroupCreatedEvent extends DomainEvent {
+    private AggregateId permissionGroupId;
+
+    private String groupName;
+
+    private String displayName;
+
+    private String description;
 }

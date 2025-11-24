@@ -17,18 +17,22 @@
  */
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
+import com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeaturePermissionMapper;
+import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionMapper;
 import com.mayanshe.scrmstd.shared.annotation.SaveDomainEvents;
 import com.mayanshe.scrmstd.platform.subscription.model.Feature;
 import com.mayanshe.scrmstd.platform.subscription.repo.FeatureRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.FeatureConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.FeatureMapper;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.FeaturePo;
+import com.mayanshe.scrmstd.shared.exception.BadRequestException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * FeatureRepositoryImpl: 功能仓储实现
@@ -37,8 +41,18 @@ import java.util.Optional;
 public class FeatureRepositoryImpl implements FeatureRepository {
     private final FeatureMapper mapper;
 
-    public FeatureRepositoryImpl(@Lazy FeatureMapper mapper) {
+    private final PermissionMapper permissionMapper;
+
+    private final FeaturePermissionMapper featurePermissionMapper;
+
+    public FeatureRepositoryImpl(
+            @Lazy FeatureMapper mapper,
+            @Lazy PermissionMapper permissionMapper,
+            @Lazy FeaturePermissionMapper featurePermissionMapper
+    ) {
         this.mapper = mapper;
+        this.permissionMapper = permissionMapper;
+        this.featurePermissionMapper = featurePermissionMapper;
     }
 
     @Override
@@ -74,6 +88,32 @@ public class FeatureRepositoryImpl implements FeatureRepository {
         // 更新功能点
         if (mapper.update(po) <= 0) {
             throw new RuntimeException("更新功能点失败，功能点ID：" + aggregate.getId());
+        }
+    }
+
+    @Override
+    @Transactional
+    @SaveDomainEvents
+    public void handleModifyFeaturePermissions(Feature aggregate) {
+        Long featureId = aggregate.getId().id();
+        Set<Long> permissionIds = aggregate.getPermissionIds();
+        verifyPermissionExists(permissionIds);
+
+        // 先删除原有关联
+        featurePermissionMapper.deleteByFeatureId(featureId);
+
+        // 再新增新的关联
+        featurePermissionMapper.batchInsert(featureId, permissionIds);
+    }
+
+    private void verifyPermissionExists(Set<Long> permissionIds) {
+        if (permissionIds == null || permissionIds.isEmpty()) {
+            return;
+        }
+
+        long count = permissionMapper.countByIds(permissionIds);
+        if (count != permissionIds.size()) {
+            throw new RuntimeException("部分权限ID不存在，请检查");
         }
     }
 

@@ -15,22 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.identity.event;
+package com.mayanshe.scrmstd.platform.subscription.event;
 
 import com.mayanshe.scrmstd.shared.base.DomainEvent;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-/**
- * ActivatePermissionGroupEvent: 激活权限组领域事件
- */
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = false)
-public class ActivatePermissionGroupEvent extends DomainEvent {
-    private AggregateId permissionGroupId;
+public class FeaturePermissionsModifiedEvent extends DomainEvent {
+    AggregateId featureId;    // 功能点ID
+    Set<Long> permissionIds;  // 权限ID集合
 }

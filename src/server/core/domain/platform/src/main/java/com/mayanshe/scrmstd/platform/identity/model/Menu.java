@@ -73,6 +73,7 @@ public class Menu extends Aggregate {
 
     private String remark;
 
+    @Builder.Default
     public boolean deleted = false;
 
     public void create() {
