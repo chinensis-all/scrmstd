@@ -15,20 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.query;
+package com.mayanshe.scrmstd.application.platform.query;
 
 import com.mayanshe.scrmstd.application.Query;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.shared.model.Pagination;
 import lombok.*;
 
 /**
- * MenuDetailQuery: 菜单详情查询
+ * MenuPaginationQuery: 查询菜单分页列表
+ *
+ * @param parentId 父菜单ID
+ * @param kind     类型
+ * @param keywords 关键字
+ * @param status   状态
+ * @param page     页码
+ * @param pageSize 每页大小
  */
-@Getter
-@Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class MenuDetailQuery implements Query<MenuDto> {
-    private Long id;
-}
+public record MenuPaginationQuery(
+        Long parentId,
+        Byte kind,
+        String keywords,
+        Byte status,
+        Long page,
+        Long pageSize
+) implements Query<Pagination<MenuDto>> {}

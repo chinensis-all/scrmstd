@@ -30,59 +30,41 @@ import lombok.*;
 public class MenuPo {
     private Long id;
 
-    @Builder.Default
-    private Long parentId = 0L;
+    private Long parentId;
 
-    @Builder.Default
-    private Byte kind = 1;
+    private Byte kind;
 
-    @Builder.Default
-    private String name = "";
+    private String name;
 
-    @Builder.Default
-    private String title = "";
+    private String title;
 
-    @Builder.Default
-    private String path = "";
+    private String path;
 
-    @Builder.Default
-    private String redirect = "";
+    private String redirect;
 
-    @Builder.Default
-    private String component = "";
+    private String component;
 
-    @Builder.Default
-    private String icon = "";
+    private String icon;
 
-    @Builder.Default
-    private Integer sort = 0;
+    private Integer sort;
 
-    @Builder.Default
-    private Byte isExternal = 0;
+    private Byte isExternal;
 
-    @Builder.Default
-    private String externalLink = "";
+    private String externalLink;
 
-    @Builder.Default
-    private Byte keepAlive = 0;
+    private Byte keepAlive;
 
-    @Builder.Default
-    private Byte hideInMenu = 0;
+    private Byte hideInMenu;
 
-    @Builder.Default
-    private Byte hideChildrenInMenu = 0;
+    private Byte hideChildrenInMenu;
 
-    @Builder.Default
-    private Byte requiresAuth = 1;
+    private Byte requiresAuth;
 
-    @Builder.Default
-    private String permission = "";
+    private String permission;
 
-    @Builder.Default
-    private Byte status = 1;
+    private Byte status;
 
-    @Builder.Default
-    private String remark = "";
+    private String remark;
 
     @Builder.Default
     private Long createdAt = 0L;

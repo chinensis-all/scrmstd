@@ -15,34 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.query.handler;
+package com.mayanshe.scrmstd.application.platform.query.handler;
 
 import com.mayanshe.scrmstd.application.QueryHandler;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
-import com.mayanshe.scrmstd.application.platform.identity.query.MenuPaginationQuery;
-import com.mayanshe.scrmstd.application.platform.identity.repo.MenuQueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.MenuPaginationQuery;
+import com.mayanshe.scrmstd.application.platform.query.repo.MenuQueryRepository;
 import com.mayanshe.scrmstd.shared.model.Pagination;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
  * MenuPaginationQueryHandler: 菜单分页查询处理器
  */
 @Service
-@RequiredArgsConstructor
 public class MenuPaginationQueryHandler implements QueryHandler<MenuPaginationQuery, Pagination<MenuDto>> {
+    private final MenuQueryRepository repository;
 
-    private final MenuQueryRepository menuQueryRepository;
+    public MenuPaginationQueryHandler(MenuQueryRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Pagination<MenuDto> handle(MenuPaginationQuery query) {
-        return menuQueryRepository.paginate(
-                query.getPage(),
-                query.getSize(),
-                query.getParentId(),
-                query.getKind(),
-                query.getKeywords(),
-                query.getStatus()
-        );
+        return repository.paginate(query.toMap(), query.page(), query.pageSize());
     }
 }

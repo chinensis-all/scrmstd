@@ -1,78 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.MenuMapper">
-    <resultMap id="BaseResultMap" type="com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo">
-        <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
-        <result column="kind" property="kind" jdbcType="TINYINT"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="title" property="title" jdbcType="VARCHAR"/>
-        <result column="path" property="path" jdbcType="VARCHAR"/>
-        <result column="redirect" property="redirect" jdbcType="VARCHAR"/>
-        <result column="component" property="component" jdbcType="VARCHAR"/>
-        <result column="icon" property="icon" jdbcType="VARCHAR"/>
-        <result column="sort" property="sort" jdbcType="INTEGER"/>
-        <result column="is_external" property="isExternal" jdbcType="TINYINT"/>
-        <result column="external_link" property="externalLink" jdbcType="VARCHAR"/>
-        <result column="keep_alive" property="keepAlive" jdbcType="TINYINT"/>
-        <result column="hide_in_menu" property="hideInMenu" jdbcType="TINYINT"/>
-        <result column="hide_children_in_menu" property="hideChildrenInMenu" jdbcType="TINYINT"/>
-        <result column="requires_auth" property="requiresAuth" jdbcType="TINYINT"/>
-        <result column="permission" property="permission" jdbcType="VARCHAR"/>
-        <result column="status" property="status" jdbcType="TINYINT"/>
-        <result column="remark" property="remark" jdbcType="VARCHAR"/>
-        <result column="created_at" property="createdAt" jdbcType="BIGINT"/>
-        <result column="updated_at" property="updatedAt" jdbcType="BIGINT"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id, parent_id, kind, name, title, path, redirect, component, icon, sort, is_external,
-        external_link, keep_alive, hide_in_menu, hide_children_in_menu, requires_auth, permission,
-        status, remark, created_at, updated_at
-    </sql>
+    <!-- 菜单(menus)表映射 -->
 
     <insert id="insert" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo">
         INSERT INTO menus
         (id, parent_id, kind, name, title, path, redirect, component, icon, sort, is_external,
          external_link, keep_alive, hide_in_menu, hide_children_in_menu, requires_auth, permission,
-         status, remark, created_at, updated_at)
+         status, remark, created_at)
         VALUES (#{id}, #{parentId}, #{kind}, #{name}, #{title}, #{path}, #{redirect}, #{component}, #{icon}, #{sort},
                 #{isExternal}, #{externalLink}, #{keepAlive}, #{hideInMenu}, #{hideChildrenInMenu}, #{requiresAuth},
-                #{permission}, #{status}, #{remark}, #{createdAt}, #{updatedAt})
+                #{permission}, #{status}, #{remark}, #{createdAt})
     </insert>
 
     <update id="update" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo">
         UPDATE menus
-        <set>
-            <if test="parentId != null">parent_id = #{parentId},</if>
-            <if test="kind != null">kind = #{kind},</if>
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="title != null and title != ''">title = #{title},</if>
-            <if test="path != null">path = #{path},</if>
-            <if test="redirect != null">redirect = #{redirect},</if>
-            <if test="component != null">component = #{component},</if>
-            <if test="icon != null">icon = #{icon},</if>
-            <if test="sort != null">sort = #{sort},</if>
-            <if test="isExternal != null">is_external = #{isExternal},</if>
-            <if test="externalLink != null">external_link = #{externalLink},</if>
-            <if test="keepAlive != null">keep_alive = #{keepAlive},</if>
-            <if test="hideInMenu != null">hide_in_menu = #{hideInMenu},</if>
-            <if test="hideChildrenInMenu != null">hide_children_in_menu = #{hideChildrenInMenu},</if>
-            <if test="requiresAuth != null">requires_auth = #{requiresAuth},</if>
-            <if test="permission != null">permission = #{permission},</if>
-            <if test="status != null">status = #{status},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
-        </set>
+        SET parent_id             = #{parentId},
+            kind                  = #{kind},
+            name                  = #{name},
+            title                 = #{title},
+            path                  = #{path},
+            redirect              = #{redirect},
+            component             = #{component},
+            icon                  = #{icon},
+            sort                  = #{sort},
+            is_external           = #{isExternal},
+            external_link         = #{externalLink},
+            keep_alive            = #{keepAlive},
+            hide_in_menu          = #{hideInMenu},
+            hide_children_in_menu = #{hideChildrenInMenu},
+            requires_auth         = #{requiresAuth},
+            permission            = #{permission},
+            status                = #{status},
+            remark                = #{remark},
+            updated_at            = #{updatedAt}
         WHERE id = #{id}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
-        DELETE FROM menus WHERE id = #{id}
+        DELETE
+        FROM menus
+        WHERE id = #{id}
     </delete>
 
-    <select id="count" parameterType="java.util.Map" resultType="java.lang.Long">
-        SELECT COUNT(1) FROM menus
+    <sql id="condition">
         <where>
             <if test="parentId != null">
                 AND parent_id = #{parentId}
@@ -90,45 +61,41 @@
                 AND status = #{status}
             </if>
         </where>
+    </sql>
+
+    <select id="count" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM menus
+        <include refid="condition"/>
     </select>
 
     <select id="search" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM menus
-        <where>
-            <if test="parentId != null">
-                AND parent_id = #{parentId}
-            </if>
-            <if test="kind != null">
-                AND kind = #{kind}
-            </if>
-            <if test="keywords != null and keywords != ''">
-                AND (
-                name LIKE CONCAT('%', #{keywords}, '%') OR
-                title LIKE CONCAT('%', #{keywords}, '%')
-                )
-            </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-        </where>
-        ORDER BY sort ASC, created_at DESC
+        <include refid="condition"/>
+        ORDER BY
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                #{orderBy}
+            </when>
+            <otherwise>
+                id ASC
+            </otherwise>
+        </choose>
         <if test="offset != null and limit != null">
             LIMIT #{offset}, #{limit}
+        </if>
+        <if test="offset == null and limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="offset != null and limit == null">
+            LIMIT #{offset}, 18446744073709551615
         </if>
     </select>
 
     <select id="findIdByCondition" parameterType="java.util.Map" resultType="java.lang.Long">
         SELECT id FROM menus
-        <where>
-            <if test="name != null and name != ''">
-                AND name = #{name}
-            </if>
-            <if test="excludeId != null">
-                AND id != #{excludeId}
-            </if>
-        </where>
+        <include refid="condition"/>
         LIMIT 1
     </select>
 </mapper>

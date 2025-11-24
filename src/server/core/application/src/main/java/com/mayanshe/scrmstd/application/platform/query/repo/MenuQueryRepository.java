@@ -15,25 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.query;
+package com.mayanshe.scrmstd.application.platform.query.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.Query;
-import lombok.*;
-
-import java.util.List;
+import com.mayanshe.scrmstd.application.QueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
 
 /**
- * MenuOptionQuery: 菜单列表查询
+ * MenuQueryRepository: 菜单查询仓储接口
  */
-@Getter
-@Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class MenuOptionQuery implements Query<List<OptionDto>> {
-    private Long parentId;
-    private Byte kind;
-    private String keywords;
-    private Byte status;
+public interface MenuQueryRepository extends QueryRepository<MenuDto, OptionDto, Long> {
 }

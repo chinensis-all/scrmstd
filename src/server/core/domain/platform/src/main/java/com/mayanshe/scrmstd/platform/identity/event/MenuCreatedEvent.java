@@ -18,6 +18,7 @@
 package com.mayanshe.scrmstd.platform.identity.event;
 
 import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -31,23 +32,41 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = false)
 public class MenuCreatedEvent extends DomainEvent {
-    private Long menuId;
+    private AggregateId menuId;
+
     private Long parentId;
+
     private Byte kind;
+
     private String name;
+
     private String title;
+
     private String path;
+
     private String redirect;
+
     private String component;
+
     private String icon;
+
     private Integer sort;
-    private Byte isExternal;
+
+    private Boolean isExternal;
+
     private String externalLink;
-    private Byte keepAlive;
-    private Byte hideInMenu;
-    private Byte hideChildrenInMenu;
-    private Byte requiresAuth;
+
+    private Boolean keepAlive;
+
+    private Boolean hideInMenu;
+
+    private Boolean hideChildrenInMenu;
+
+    private Boolean requiresAuth;
+
     private String permission;
+
     private Byte status;
+
     private String remark;
 }

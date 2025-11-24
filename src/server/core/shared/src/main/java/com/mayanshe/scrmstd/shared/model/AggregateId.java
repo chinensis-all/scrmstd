@@ -23,4 +23,11 @@ package com.mayanshe.scrmstd.shared.model;
  * @param newed 是否新建的
  */
 public record AggregateId(long id, boolean newed) {
+    public static AggregateId of(long id) {
+        return new AggregateId(id, false);
+    }
+
+    public static AggregateId newed(long id) {
+        return new AggregateId(id, true);
+    }
 }

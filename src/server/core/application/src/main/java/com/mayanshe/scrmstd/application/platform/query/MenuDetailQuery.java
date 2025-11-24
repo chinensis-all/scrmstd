@@ -15,20 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.repo;
+package com.mayanshe.scrmstd.application.platform.query;
 
-import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.QueryRepository;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
-import com.mayanshe.scrmstd.shared.model.Pagination;
-
-import java.util.List;
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import lombok.*;
 
 /**
- * MenuQueryRepository: 菜单查询仓储接口
+ * MenuDetailQuery: 菜单详情查询
  */
-public interface MenuQueryRepository extends QueryRepository<MenuDto> {
-    Pagination<MenuDto> paginate(int page, int size, Long parentId, Byte kind, String keywords, Byte status);
-
-    List<OptionDto> options(Long parentId, Byte kind, String keywords, Byte status);
-}
+public record MenuDetailQuery(
+        Long id
+) implements Query<MenuDto> {}

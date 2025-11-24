@@ -15,37 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.command;
+package com.mayanshe.scrmstd.application.platform.command;
 
 import com.mayanshe.scrmstd.application.Command;
 import lombok.*;
 
 /**
- * ModifyMenuCommand: 修改菜单命令
+ * DeleteMenuCommand : 删除菜单命令
+ *
+ * @param id 菜单ID
  */
-@Getter
-@Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class ModifyMenuCommand extends Command {
-    private Long id;
-    private Long parentId;
-    private Byte kind;
-    private String name;
-    private String title;
-    private String path;
-    private String redirect;
-    private String component;
-    private String icon;
-    private Integer sort;
-    private Byte isExternal;
-    private String externalLink;
-    private Byte keepAlive;
-    private Byte hideInMenu;
-    private Byte hideChildrenInMenu;
-    private Byte requiresAuth;
-    private String permission;
-    private Byte status;
-    private String remark;
-}
+public record DeleteMenuCommand(
+    Long id
+) implements Command<Boolean> {}

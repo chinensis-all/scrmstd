@@ -28,8 +28,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-@Component
+@Mapper
 public interface PermissionGroupConverter extends BaseConverter {
     PermissionGroupConverter INSTANCE = Mappers.getMapper(PermissionGroupConverter.class);
 

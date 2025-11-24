@@ -18,94 +18,67 @@
 package com.mayanshe.scrmstd.infrastructure.external.converter;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo;
 import com.mayanshe.scrmstd.platform.identity.model.Menu;
-import com.mayanshe.scrmstd.shared.contract.IdGenerator;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 
 /**
  * MenuConverter: 菜单对象转换器
  */
-@Component
-public class MenuConverter {
+@Mapper
+public interface MenuConverter extends BaseConverter {
+    MenuConverter INSTANCE = Mappers.getMapper(MenuConverter.class);
 
-    public MenuPo toPo(Menu menu) {
-        return MenuPo.builder()
-                .id(menu.getId())
-                .parentId(menu.getParentId())
-                .kind(menu.getKind())
-                .name(menu.getName())
-                .title(menu.getTitle())
-                .path(menu.getPath())
-                .redirect(menu.getRedirect())
-                .component(menu.getComponent())
-                .icon(menu.getIcon())
-                .sort(menu.getSort())
-                .isExternal(menu.getIsExternal())
-                .externalLink(menu.getExternalLink())
-                .keepAlive(menu.getKeepAlive())
-                .hideInMenu(menu.getHideInMenu())
-                .hideChildrenInMenu(menu.getHideChildrenInMenu())
-                .requiresAuth(menu.getRequiresAuth())
-                .permission(menu.getPermission())
-                .status(menu.getStatus())
-                .remark(menu.getRemark())
-                .build();
-    }
+    @Mappings({
+            @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true),
+            @Mapping(target = "isExternal", source = "isExternal", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "keepAlive", source = "keepAlive", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "hideInMenu", source = "hideInMenu", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "hideChildrenInMenu", source = "hideChildrenInMenu", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "requiresAuth", source = "requiresAuth", qualifiedByName = "booleanToByte")
+    })
+    MenuPo toPo(Menu aggregate);
 
-    public Menu toAggregate(MenuPo po) {
-        return Menu.builder()
-                .id(po.getId())
-                .parentId(po.getParentId())
-                .kind(po.getKind())
-                .name(po.getName())
-                .title(po.getTitle())
-                .path(po.getPath())
-                .redirect(po.getRedirect())
-                .component(po.getComponent())
-                .icon(po.getIcon())
-                .sort(po.getSort())
-                .isExternal(po.getIsExternal())
-                .externalLink(po.getExternalLink())
-                .keepAlive(po.getKeepAlive())
-                .hideInMenu(po.getHideInMenu())
-                .hideChildrenInMenu(po.getHideChildrenInMenu())
-                .requiresAuth(po.getRequiresAuth())
-                .permission(po.getPermission())
-                .status(po.getStatus())
-                .remark(po.getRemark())
-                .build();
-    }
+    @Mappings({
+            @Mapping(target = "id", source = "id", qualifiedByName = "aggregateIdToId"),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true),
+            @Mapping(target = "isExternal", source = "isExternal", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "keepAlive", source = "keepAlive", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "hideInMenu", source = "hideInMenu", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "hideChildrenInMenu", source = "hideChildrenInMenu", qualifiedByName = "booleanToByte"),
+            @Mapping(target = "requiresAuth", source = "requiresAuth", qualifiedByName = "booleanToByte")
+    })
+    MenuPo updatePo(Menu aggregate, @MappingTarget MenuPo po);
 
-    public MenuDto toDto(MenuPo po) {
-        MenuDto dto = MenuDto.builder()
-                .kind(po.getKind())
-                .name(po.getName())
-                .title(po.getTitle())
-                .path(po.getPath())
-                .redirect(po.getRedirect())
-                .component(po.getComponent())
-                .icon(po.getIcon())
-                .sort(po.getSort())
-                .isExternal(po.getIsExternal())
-                .externalLink(po.getExternalLink())
-                .keepAlive(po.getKeepAlive())
-                .hideInMenu(po.getHideInMenu())
-                .hideChildrenInMenu(po.getHideChildrenInMenu())
-                .requiresAuth(po.getRequiresAuth())
-                .permission(po.getPermission())
-                .status(po.getStatus())
-                .remark(po.getRemark())
-                .createdAt(String.valueOf(po.getCreatedAt()))
-                .updatedAt(String.valueOf(po.getUpdatedAt()))
-                .build();
-        dto.setId(po.getId());
-        dto.setParentId(po.getParentId());
-        return dto;
-    }
+    @Mappings({
+            @Mapping(target = "id", source = "id", qualifiedByName = "idToAggregateId"),
+            @Mapping(target = "isExternal", source = "isExternal", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "keepAlive", source = "keepAlive", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "hideInMenu", source = "hideInMenu", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "hideChildrenInMenu", source = "hideChildrenInMenu", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "requiresAuth", source = "requiresAuth", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "deleted", ignore = true),
+    })
+    Menu toAggregate(MenuPo po);
 
-    public OptionDto toOptionDto(MenuPo po) {
-        return new OptionDto(String.valueOf(po.getId()), po.getTitle());
-    }
+    @Mappings({
+            @Mapping(target = "id", expression = "java(String.valueOf(po.getId()))"),
+            @Mapping(target = "parentId", expression = "java(String.valueOf(po.getParentId()))"),
+            @Mapping(target = "isExternal", source = "isExternal", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "keepAlive", source = "keepAlive", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "hideInMenu", source = "hideInMenu", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "hideChildrenInMenu", source = "hideChildrenInMenu", qualifiedByName = "byteToBoolean"),
+            @Mapping(target = "requiresAuth", source = "requiresAuth", qualifiedByName = "byteToBoolean")
+    })
+    MenuDto toDto(MenuPo po);
+
+    OptionDto toOptionDto(MenuPo po);
 }

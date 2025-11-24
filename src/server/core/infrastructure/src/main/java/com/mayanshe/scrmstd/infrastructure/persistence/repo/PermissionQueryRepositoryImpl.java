@@ -36,11 +36,9 @@ import java.util.Optional;
 @Repository
 public class PermissionQueryRepositoryImpl implements PermissionQueryRepository {
     private final PermissionMapper mapper;
-    private final PermissionConverter converter;
 
-    public PermissionQueryRepositoryImpl(PermissionMapper mapper, PermissionConverter converter) {
+    public PermissionQueryRepositoryImpl(PermissionMapper mapper) {
         this.mapper = mapper;
-        this.converter = converter;
     }
 
     /**
@@ -55,7 +53,7 @@ public class PermissionQueryRepositoryImpl implements PermissionQueryRepository 
             return Optional.empty();
         }
 
-        PermissionDto dto = converter.toDto(mapper.findById(id));
+        PermissionDto dto = PermissionConverter.INSTANCE.toDto(mapper.findById(id));
 
         return Optional.ofNullable(dto);
     }
@@ -69,7 +67,7 @@ public class PermissionQueryRepositoryImpl implements PermissionQueryRepository 
             criteria.put("limit", limit);
         }
         return mapper.search(criteria).stream()
-                .map(converter::toOptionDto)
+                .map(PermissionConverter.INSTANCE::toOptionDto)
                 .toList();
     }
 
@@ -84,6 +82,6 @@ public class PermissionQueryRepositoryImpl implements PermissionQueryRepository 
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", size);
         }
-        return Pager.paginate(mapper, criteria, converter::toDto, page, size);
+        return Pager.paginate(mapper, criteria, PermissionConverter.INSTANCE::toDto, page, size);
     }
 }

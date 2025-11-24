@@ -15,39 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.command.handler;
+package com.mayanshe.scrmstd.application.platform.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.platform.identity.command.DeleteMenuCommand;
+import com.mayanshe.scrmstd.application.platform.command.DeleteMenuCommand;
 import com.mayanshe.scrmstd.platform.identity.model.Menu;
 import com.mayanshe.scrmstd.platform.identity.repo.MenuRepository;
-import com.mayanshe.scrmstd.shared.exception.NotFoundException;
-import lombok.RequiredArgsConstructor;
+import com.mayanshe.scrmstd.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * DeleteMenuCommandHandler: 删除菜单命令处理器
  */
 @Service
-@RequiredArgsConstructor
 public class DeleteMenuCommandHandler implements CommandHandler<DeleteMenuCommand, Boolean> {
+    private final MenuRepository repository;
 
-    private final MenuRepository menuRepository;
-    private final DomainEventPublisher domainEventPublisher;
+    private final DomainEventPublisher publisher;
+
+    public DeleteMenuCommandHandler(MenuRepository repository, DomainEventPublisher publisher) {
+        this.repository = repository;
+        this.publisher = publisher;
+    }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Boolean handle(DeleteMenuCommand command) {
-        Menu menu = menuRepository.find(command.getId());
-        if (menu == null) {
-            throw new NotFoundException("菜单不存在");
-        }
-
+        Menu menu = repository.load(command.id()).orElseThrow(() -> new ResourceNotFoundException("未找到此菜单: " + command.id()));
         menu.delete();
-        menuRepository.save(menu);
-        domainEventPublisher.publish(menu);
+
+        repository.save(menu);
+        publisher.confirm(menu.getEvents());
+
         return true;
     }
 }

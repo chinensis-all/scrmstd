@@ -18,72 +18,55 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
-import com.mayanshe.scrmstd.application.platform.identity.repo.MenuQueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.repo.MenuQueryRepository;
 import com.mayanshe.scrmstd.infrastructure.external.converter.MenuConverter;
 import com.mayanshe.scrmstd.infrastructure.persistence.mapper.MenuMapper;
-import com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo;
+import com.mayanshe.scrmstd.infrastructure.support.Pager;
 import com.mayanshe.scrmstd.shared.model.Pagination;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * MenuQueryRepositoryImpl: 菜单查询仓储接口实现
  */
 @Repository
-@RequiredArgsConstructor
 public class MenuQueryRepositoryImpl implements MenuQueryRepository {
+    private final MenuMapper mapper;
 
-    private final MenuMapper menuMapper;
-    private final MenuConverter menuConverter;
-
-    @Override
-    public MenuDto find(Long id) {
-        MenuPo po = menuMapper.findById(id);
-        if (po == null) {
-            return null;
-        }
-        return menuConverter.toDto(po);
+    public MenuQueryRepositoryImpl(MenuMapper mapper) {
+        this.mapper = mapper;
     }
 
     @Override
-    public Pagination<MenuDto> paginate(int page, int size, Long parentId, Byte kind, String keywords, Byte status) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("parentId", parentId);
-        params.put("kind", kind);
-        params.put("keywords", keywords);
-        params.put("status", status);
-
-        long total = menuMapper.count(params);
-        if (total == 0) {
-            return Pagination.empty(page, size);
+    public Optional<MenuDto> single(Long key) {
+        if (key == null || key <= 0) {
+            return Optional.empty();
         }
 
-        params.put("offset", (page - 1) * size);
-        params.put("limit", size);
-
-        List<MenuDto> list = menuMapper.search(params).stream()
-                .map(menuConverter::toDto)
-                .collect(Collectors.toList());
-
-        return Pagination.of(page, size, total, list);
+        MenuDto dto = MenuConverter.INSTANCE.toDto(mapper.findById(key));
+        return Optional.ofNullable(dto);
     }
 
     @Override
-    public List<OptionDto> options(Long parentId, Byte kind, String keywords, Byte status) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("parentId", parentId);
-        params.put("kind", kind);
-        params.put("keywords", keywords);
-        params.put("status", status);
+    public List<OptionDto> search(Map<String, Object> criteria, long limit) {
+        if (!criteria.containsKey("limit")) {
+            criteria.put("limit", limit);
+        }
+        return mapper.search(criteria).stream().map(po -> new OptionDto(String.valueOf(po.getId()), String.format("%s(%s)", po.getName(), po.getRemark()))).toList();
+    }
 
-        return menuMapper.search(params).stream()
-                .map(menuConverter::toOptionDto)
-                .collect(Collectors.toList());
+    @Override
+    public Pagination<MenuDto> paginate(Map<String, Object> criteria, long page, long size) {
+        if (!criteria.containsKey("offset")) {
+            criteria.put("offset", (page - 1) * size);
+        }
+        if (!criteria.containsKey("limit")) {
+            criteria.put("limit", size);
+        }
+        return Pager.paginate(mapper, criteria, MenuConverter.INSTANCE::toDto, page, size);
     }
 }

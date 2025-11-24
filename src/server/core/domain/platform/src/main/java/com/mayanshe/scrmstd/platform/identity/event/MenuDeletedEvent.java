@@ -18,6 +18,7 @@
 package com.mayanshe.scrmstd.platform.identity.event;
 
 import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -31,5 +32,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = false)
 public class MenuDeletedEvent extends DomainEvent {
-    private Long menuId;
+    private AggregateId menuId;
 }

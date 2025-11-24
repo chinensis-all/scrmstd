@@ -15,33 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.query.handler;
+package com.mayanshe.scrmstd.application.platform.query.handler;
 
-import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.QueryHandler;
-import com.mayanshe.scrmstd.application.platform.identity.query.MenuOptionQuery;
-import com.mayanshe.scrmstd.application.platform.identity.repo.MenuQueryRepository;
-import lombok.RequiredArgsConstructor;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.MenuDetailQuery;
+import com.mayanshe.scrmstd.application.platform.query.repo.MenuQueryRepository;
+import com.mayanshe.scrmstd.shared.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
- * MenuOptionQueryHandler: 菜单列表查询处理器
+ * MenuDetailQueryHandler: 菜单详情查询处理器
  */
 @Service
-@RequiredArgsConstructor
-public class MenuOptionQueryHandler implements QueryHandler<MenuOptionQuery, List<OptionDto>> {
+public class MenuDetailQueryHandler implements QueryHandler<MenuDetailQuery, MenuDto> {
+    private final MenuQueryRepository repository;
 
-    private final MenuQueryRepository menuQueryRepository;
+    public MenuDetailQueryHandler(MenuQueryRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
-    public List<OptionDto> handle(MenuOptionQuery query) {
-        return menuQueryRepository.options(
-                query.getParentId(),
-                query.getKind(),
-                query.getKeywords(),
-                query.getStatus()
-        );
+    public MenuDto handle(MenuDetailQuery query) {
+        return repository.single(query.id())
+                .orElseThrow(() -> new ResourceNotFoundException("菜单不存在：" + query.id()));
     }
 }

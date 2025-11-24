@@ -31,8 +31,7 @@ import org.springframework.stereotype.Component;
 /**
  * PermissionConverter: 权限转换器
  */
-@Mapper(componentModel = "spring")
-@Component
+@Mapper
 public interface PermissionConverter extends BaseConverter {
     PermissionConverter INSTANCE = Mappers.getMapper(PermissionConverter.class);
 
@@ -52,6 +51,7 @@ public interface PermissionConverter extends BaseConverter {
 
     @Mappings({
             @Mapping(target = "id", source = "id", qualifiedByName = "idToAggregateId"),
+            @Mapping(target = "deleted", ignore = true),
     })
     Permission toAggregate(PermissionPo po);
 

@@ -21,7 +21,9 @@ import com.mayanshe.scrmstd.platform.identity.event.MenuCreatedEvent;
 import com.mayanshe.scrmstd.platform.identity.event.MenuDeletedEvent;
 import com.mayanshe.scrmstd.platform.identity.event.MenuModifiedEvent;
 import com.mayanshe.scrmstd.shared.base.Aggregate;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
 import lombok.*;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
  * Menu: 菜单聚合根
@@ -33,52 +35,48 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Menu extends Aggregate {
-    private Long id;
+    private AggregateId id;
+
     private Long parentId;
+
     private Byte kind;
+
     private String name;
+
     private String title;
+
     private String path;
+
     private String redirect;
+
     private String component;
+
     private String icon;
+
     private Integer sort;
-    private Byte isExternal;
+
+    private Boolean isExternal;
+
     private String externalLink;
-    private Byte keepAlive;
-    private Byte hideInMenu;
-    private Byte hideChildrenInMenu;
-    private Byte requiresAuth;
+
+    private Boolean keepAlive;
+
+    private Boolean hideInMenu;
+
+    private Boolean hideChildrenInMenu;
+
+    private Boolean requiresAuth;
+
     private String permission;
+
     private Byte status;
+
     private String remark;
 
     public boolean deleted = false;
 
-    public void create(Long id, Long parentId, Byte kind, String name, String title, String path,
-                       String redirect, String component, String icon, Integer sort, Byte isExternal,
-                       String externalLink, Byte keepAlive, Byte hideInMenu, Byte hideChildrenInMenu,
-                       Byte requiresAuth, String permission, Byte status, String remark) {
-        this.id = id;
-        this.parentId = parentId;
-        this.kind = kind;
-        this.name = name;
-        this.title = title;
-        this.path = path;
-        this.redirect = redirect;
-        this.component = component;
-        this.icon = icon;
-        this.sort = sort;
-        this.isExternal = isExternal;
-        this.externalLink = externalLink;
-        this.keepAlive = keepAlive;
-        this.hideInMenu = hideInMenu;
-        this.hideChildrenInMenu = hideChildrenInMenu;
-        this.requiresAuth = requiresAuth;
-        this.permission = permission;
-        this.status = status;
-        this.remark = remark;
-        this.deleted = false;
+    public void create() {
+        this.setDeleted(false);
 
         MenuCreatedEvent event = MenuCreatedEvent.builder()
                 .menuId(id)
@@ -104,28 +102,8 @@ public class Menu extends Aggregate {
         this.registerEvent(event);
     }
 
-    public void modify(Long parentId, Byte kind, String name, String title, String path,
-                       String redirect, String component, String icon, Integer sort, Byte isExternal,
-                       String externalLink, Byte keepAlive, Byte hideInMenu, Byte hideChildrenInMenu,
-                       Byte requiresAuth, String permission, Byte status, String remark) {
-        this.parentId = parentId;
-        this.kind = kind;
-        this.name = name;
-        this.title = title;
-        this.path = path;
-        this.redirect = redirect;
-        this.component = component;
-        this.icon = icon;
-        this.sort = sort;
-        this.isExternal = isExternal;
-        this.externalLink = externalLink;
-        this.keepAlive = keepAlive;
-        this.hideInMenu = hideInMenu;
-        this.hideChildrenInMenu = hideChildrenInMenu;
-        this.requiresAuth = requiresAuth;
-        this.permission = permission;
-        this.status = status;
-        this.remark = remark;
+    public void modify() {
+        this.setDeleted(false);
 
         MenuModifiedEvent event = MenuModifiedEvent.builder()
                 .menuId(this.id)
@@ -152,7 +130,8 @@ public class Menu extends Aggregate {
     }
 
     public void delete() {
-        this.deleted = true;
+        this.setDeleted(true);
+
         MenuDeletedEvent event = MenuDeletedEvent.builder()
                 .menuId(this.id)
                 .build();

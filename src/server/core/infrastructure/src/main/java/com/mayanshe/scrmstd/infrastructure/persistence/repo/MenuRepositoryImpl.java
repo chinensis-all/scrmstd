@@ -22,8 +22,14 @@ import com.mayanshe.scrmstd.infrastructure.persistence.mapper.MenuMapper;
 import com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo;
 import com.mayanshe.scrmstd.platform.identity.model.Menu;
 import com.mayanshe.scrmstd.platform.identity.repo.MenuRepository;
+import com.mayanshe.scrmstd.shared.annotation.SaveDomainEvents;
+import com.mayanshe.scrmstd.shared.exception.InternalServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * MenuRepositoryImpl: 菜单仓储接口实现
@@ -32,39 +38,55 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MenuRepositoryImpl implements MenuRepository {
 
-    private final MenuMapper menuMapper;
-    private final MenuConverter menuConverter;
+    private final MenuMapper mapper;
 
-    @Override
-    public void save(Menu aggregate) {
-        if (aggregate.isDeleted()) {
-            menuMapper.delete(aggregate.getId());
-        } else {
-            MenuPo po = menuConverter.toPo(aggregate);
-            MenuPo exist = menuMapper.findById(po.getId());
-            if (exist == null) {
-                long now = System.currentTimeMillis() / 1000;
-                po.setCreatedAt(now);
-                po.setUpdatedAt(now);
-                menuMapper.insert(po);
-            } else {
-                po.setUpdatedAt(System.currentTimeMillis() / 1000);
-                menuMapper.update(po);
-            }
-        }
-    }
-
-    @Override
-    public Menu find(Long id) {
-        MenuPo po = menuMapper.findById(id);
-        if (po == null) {
+    private MenuPo getPo(Long id) {
+        if (id == null || id <= 0) {
             return null;
         }
-        return menuConverter.toAggregate(po);
+
+        return mapper.findById(id);
     }
 
     @Override
-    public void remove(Long id) {
-        menuMapper.delete(id);
+    public Optional<Menu> load(Long id) {
+        MenuPo po = getPo(id);
+        if (po == null) {
+            return Optional.empty();
+        }
+        Menu aggregate = MenuConverter.INSTANCE.toAggregate(po);
+        return Optional.of(aggregate);
+    }
+
+
+    @Override
+    @Transactional
+    @SaveDomainEvents
+    public void save(Menu aggregate) {
+        if (aggregate.isDeleted()) {
+            if (mapper.delete(aggregate.getId().id()) <= 0) {
+                throw new InternalServerException("删除菜单失败: " + aggregate.getId().id());
+            }
+        }
+
+        verifyConflict(aggregate);
+        MenuPo po = MenuConverter.INSTANCE.toPo(aggregate);
+
+        if (aggregate.getId().newed()) {
+            if (mapper.insert(po) <= 0) {
+                throw new InternalServerException("新增菜单失败: " + aggregate.getName());
+            }
+        }
+
+        if (mapper.update(po) <= 0) {
+            throw new InternalServerException("修改菜单失败: " + aggregate.getId().id());
+        }
+    }
+
+    private void verifyConflict(Menu aggregate) {
+        Long nameExistingId = mapper.findIdByCondition(Map.of("name", aggregate.getName()));
+        if (nameExistingId != null && !nameExistingId.equals(aggregate.getId().id())) {
+            throw new InternalServerException("菜单名称已存在: " + aggregate.getName());
+        }
     }
 }

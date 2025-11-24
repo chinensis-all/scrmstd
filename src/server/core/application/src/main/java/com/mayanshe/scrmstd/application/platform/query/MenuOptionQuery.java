@@ -15,19 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.application.platform.identity.command;
+package com.mayanshe.scrmstd.application.platform.query;
 
-import com.mayanshe.scrmstd.application.Command;
-import lombok.*;
+import com.mayanshe.scrmstd.application.OptionDto;
+import com.mayanshe.scrmstd.application.Query;
+
+import java.util.List;
 
 /**
- * DeleteMenuCommand: 删除菜单命令
+ * 菜单选项查询
+ *
+ * @param parentId 父菜单ID
+ * @param kind     类型
+ * @param keywords 关键字
+ * @param status   状态
  */
-@Getter
-@Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class DeleteMenuCommand extends Command {
-    private Long id;
-}
+public record MenuOptionQuery(
+        Long parentId,
+        Byte kind,
+        String keywords,
+        Byte status
+) implements Query<List<OptionDto>> {}

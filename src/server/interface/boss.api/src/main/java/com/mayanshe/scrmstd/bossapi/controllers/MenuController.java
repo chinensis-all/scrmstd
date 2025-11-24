@@ -20,17 +20,17 @@ package com.mayanshe.scrmstd.bossapi.controllers;
 import com.mayanshe.scrmstd.application.CommandBus;
 import com.mayanshe.scrmstd.application.OptionDto;
 import com.mayanshe.scrmstd.application.QueryBus;
-import com.mayanshe.scrmstd.application.platform.identity.command.CreateMenuCommand;
-import com.mayanshe.scrmstd.application.platform.identity.command.DeleteMenuCommand;
-import com.mayanshe.scrmstd.application.platform.identity.command.ModifyMenuCommand;
-import com.mayanshe.scrmstd.application.platform.identity.dto.MenuDto;
-import com.mayanshe.scrmstd.application.platform.identity.query.MenuDetailQuery;
-import com.mayanshe.scrmstd.application.platform.identity.query.MenuOptionQuery;
-import com.mayanshe.scrmstd.application.platform.identity.query.MenuPaginationQuery;
+import com.mayanshe.scrmstd.application.platform.command.CreateMenuCommand;
+import com.mayanshe.scrmstd.application.platform.command.DeleteMenuCommand;
+import com.mayanshe.scrmstd.application.platform.command.ModifyMenuCommand;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.MenuDetailQuery;
+import com.mayanshe.scrmstd.application.platform.query.MenuOptionQuery;
+import com.mayanshe.scrmstd.application.platform.query.MenuPaginationQuery;
 import com.mayanshe.scrmstd.bossapi.requests.CreateMenuRequest;
 import com.mayanshe.scrmstd.bossapi.requests.ModifyMenuRequest;
 import com.mayanshe.scrmstd.shared.contract.IdGenerator;
-import com.mayanshe.scrmstd.shared.contract.RestResponse;
+import com.mayanshe.scrmstd.shared.model.IDResponse;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -55,123 +55,141 @@ public class MenuController {
      * 创建菜单
      */
     @PostMapping
-    public RestResponse<String> create(@RequestBody @Valid CreateMenuRequest request) {
-        CreateMenuCommand command = CreateMenuCommand.builder()
-                .parentId(request.getParentId() != null ? IdGenerator.fromBase62(request.getParentId()) : 0L)
-                .kind(request.getKind())
-                .name(request.getName())
-                .title(request.getTitle())
-                .path(request.getPath())
-                .redirect(request.getRedirect())
-                .component(request.getComponent())
-                .icon(request.getIcon())
-                .sort(request.getSort())
-                .isExternal(request.getIsExternal())
-                .externalLink(request.getExternalLink())
-                .keepAlive(request.getKeepAlive())
-                .hideInMenu(request.getHideInMenu())
-                .hideChildrenInMenu(request.getHideChildrenInMenu())
-                .requiresAuth(request.getRequiresAuth())
-                .permission(request.getPermission())
-                .status(request.getStatus())
-                .remark(request.getRemark())
-                .build();
+    public IDResponse createMenu(@RequestBody @Valid CreateMenuRequest request) {
+        CreateMenuCommand command = new CreateMenuCommand(
+                request.getParentId() != null ? IdGenerator.fromBase62(request.getParentId()) : 0L,
+                request.getKind(),
+                request.getName(),
+                request.getTitle(),
+                request.getPath(),
+                request.getRedirect(),
+                request.getComponent(),
+                request.getIcon(),
+                request.getSort(),
+                request.getIsExternal(),
+                request.getExternalLink(),
+                request.getKeepAlive(),
+                request.getHideInMenu(),
+                request.getHideChildrenInMenu(),
+                request.getRequiresAuth(),
+                request.getPermission(),
+                request.getStatus(),
+                request.getRemark()
+        );
 
-        Long id = commandBus.dispatch(command);
-        return RestResponse.success(IdGenerator.toBase62(id));
+        Long id = commandBus.execute(command);
+
+        return new IDResponse(IdGenerator.toBase62(id));
     }
 
     /**
      * 修改菜单
      */
     @PutMapping("/{id}")
-    public RestResponse<Boolean> modify(@PathVariable String id, @RequestBody @Valid ModifyMenuRequest request) {
-        ModifyMenuCommand command = ModifyMenuCommand.builder()
-                .id(IdGenerator.fromBase62(id))
-                .parentId(request.getParentId() != null ? IdGenerator.fromBase62(request.getParentId()) : 0L)
-                .kind(request.getKind())
-                .name(request.getName())
-                .title(request.getTitle())
-                .path(request.getPath())
-                .redirect(request.getRedirect())
-                .component(request.getComponent())
-                .icon(request.getIcon())
-                .sort(request.getSort())
-                .isExternal(request.getIsExternal())
-                .externalLink(request.getExternalLink())
-                .keepAlive(request.getKeepAlive())
-                .hideInMenu(request.getHideInMenu())
-                .hideChildrenInMenu(request.getHideChildrenInMenu())
-                .requiresAuth(request.getRequiresAuth())
-                .permission(request.getPermission())
-                .status(request.getStatus())
-                .remark(request.getRemark())
-                .build();
+    public void modifyMeny(@PathVariable String id, @RequestBody @Valid ModifyMenuRequest request) {
+        ModifyMenuCommand command = new ModifyMenuCommand(
+                IdGenerator.fromBase62(id),
+                request.getParentId() != null ? IdGenerator.fromBase62(request.getParentId()) : 0L,
+                request.getKind(),
+                request.getName(),
+                request.getTitle(),
+                request.getPath(),
+                request.getRedirect(),
+                request.getComponent(),
+                request.getIcon(),
+                request.getSort(),
+                request.getIsExternal(),
+                request.getExternalLink(),
+                request.getKeepAlive(),
+                request.getHideInMenu(),
+                request.getHideChildrenInMenu(),
+                request.getRequiresAuth(),
+                request.getPermission(),
+                request.getStatus(),
+                request.getRemark()
+        );
 
-        return RestResponse.success(commandBus.dispatch(command));
+        commandBus.execute(command);
     }
 
     /**
      * 删除菜单
+     *
+     * @param id 菜单ID
      */
     @DeleteMapping("/{id}")
-    public RestResponse<Boolean> delete(@PathVariable String id) {
-        DeleteMenuCommand command = DeleteMenuCommand.builder()
-                .id(IdGenerator.fromBase62(id))
-                .build();
-        return RestResponse.success(commandBus.dispatch(command));
+    public void delete(@PathVariable String id) {
+        DeleteMenuCommand command = new DeleteMenuCommand(
+                IdGenerator.fromBase62(id)
+        );
+
+        commandBus.execute(command);
     }
 
     /**
-     * 获取菜单详情
+     * 菜单详情
+     *
+     * @param id 菜单ID
+     * @return   菜单详情
      */
     @GetMapping("/{id}")
-    public RestResponse<MenuDto> detail(@PathVariable String id) {
-        MenuDetailQuery query = MenuDetailQuery.builder()
-                .id(IdGenerator.fromBase62(id))
-                .build();
-        return RestResponse.success(queryBus.dispatch(query));
+    public MenuDto detail(@PathVariable String id) {
+        MenuDetailQuery query = new MenuDetailQuery(
+                IdGenerator.fromBase62(id)
+        );
+
+        return queryBus.execute(query);
     }
 
     /**
      * 菜单分页查询
+     *
+     * @param page     页码
+     * @param pageSize 分页大小
+     * @param parentId 父级ID
+     * @param kind     菜单类型
+     * @param keywords 关键词
+     * @param status   状态
+     * @return         菜单分页结果
      */
     @GetMapping
-    public RestResponse<Pagination<MenuDto>> paginate(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(required = false) String parentId,
-            @RequestParam(required = false) Byte kind,
-            @RequestParam(required = false) String keywords,
-            @RequestParam(required = false) Byte status
+    public Pagination<MenuDto> paginate(
+            @RequestParam(value = "page", defaultValue = "1") long page,
+            @RequestParam(value = "pageSize", defaultValue = "20") long pageSize,
+            @RequestParam(value = "parentId", required = false) String parentId,
+            @RequestParam(value = "kind",required = false) Byte kind,
+            @RequestParam(value = "keywords", required = false) String keywords,
+            @RequestParam(value = "status", required = false) Byte status
     ) {
-        MenuPaginationQuery query = MenuPaginationQuery.builder()
-                .page(page)
-                .size(size)
-                .parentId(parentId != null ? IdGenerator.fromBase62(parentId) : null)
-                .kind(kind)
-                .keywords(keywords)
-                .status(status)
-                .build();
-        return RestResponse.success(queryBus.dispatch(query));
+        MenuPaginationQuery query = new MenuPaginationQuery(
+                parentId != null ? IdGenerator.fromBase62(parentId) : null,
+                kind,
+                keywords,
+                status,
+                page,
+                pageSize
+        );
+
+        return queryBus.execute(query);
     }
 
     /**
      * 菜单列表查询(用于下拉选项等)
      */
     @GetMapping("/options")
-    public RestResponse<List<OptionDto>> options(
+    public List<OptionDto> options(
             @RequestParam(required = false) String parentId,
             @RequestParam(required = false) Byte kind,
             @RequestParam(required = false) String keywords,
             @RequestParam(required = false) Byte status
     ) {
-        MenuOptionQuery query = MenuOptionQuery.builder()
-                .parentId(parentId != null ? IdGenerator.fromBase62(parentId) : null)
-                .kind(kind)
-                .keywords(keywords)
-                .status(status)
-                .build();
-        return RestResponse.success(queryBus.dispatch(query));
+        MenuOptionQuery query = new MenuOptionQuery(
+                parentId != null ? IdGenerator.fromBase62(parentId) : null,
+                kind,
+                keywords,
+                status
+        );
+
+        return queryBus.execute(query);
     }
 }
