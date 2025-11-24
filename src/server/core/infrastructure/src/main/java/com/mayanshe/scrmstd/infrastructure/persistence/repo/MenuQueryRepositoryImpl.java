@@ -18,10 +18,10 @@
 package com.mayanshe.scrmstd.infrastructure.persistence.repo;
 
 import com.mayanshe.scrmstd.application.OptionDto;
-import com.mayanshe.scrmstd.application.platform.query.dto.PermissionDto;
-import com.mayanshe.scrmstd.application.platform.query.repo.PermissionQueryRepository;
-import com.mayanshe.scrmstd.infrastructure.external.converter.PermissionConverter;
-import com.mayanshe.scrmstd.infrastructure.persistence.mapper.PermissionMapper;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.application.platform.query.repo.MenuQueryRepository;
+import com.mayanshe.scrmstd.infrastructure.external.converter.MenuConverter;
+import com.mayanshe.scrmstd.infrastructure.persistence.mapper.MenuMapper;
 import com.mayanshe.scrmstd.infrastructure.support.Pager;
 import com.mayanshe.scrmstd.shared.model.Pagination;
 import org.springframework.stereotype.Repository;
@@ -31,57 +31,42 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * PermissionQueryRepositoryImpl: 权限查询仓储实现
+ * MenuQueryRepositoryImpl: 菜单查询仓储接口实现
  */
 @Repository
-public class PermissionQueryRepositoryImpl implements PermissionQueryRepository {
-    private final PermissionMapper mapper;
+public class MenuQueryRepositoryImpl implements MenuQueryRepository {
+    private final MenuMapper mapper;
 
-    public PermissionQueryRepositoryImpl(PermissionMapper mapper) {
+    public MenuQueryRepositoryImpl(MenuMapper mapper) {
         this.mapper = mapper;
     }
 
-    /**
-     * 获取单个权限
-     *
-     * @param id 主键
-     * @return   权限DTO
-     */
     @Override
-    public Optional<PermissionDto> single(Long id) {
-        if (id == null || id <= 0) {
+    public Optional<MenuDto> single(Long key) {
+        if (key == null || key <= 0) {
             return Optional.empty();
         }
 
-        PermissionDto dto = PermissionConverter.INSTANCE.toDto(mapper.findById(id));
-
+        MenuDto dto = MenuConverter.INSTANCE.toDto(mapper.findById(key));
         return Optional.ofNullable(dto);
     }
 
-    /**
-     * 搜索权限选项列表
-     */
     @Override
     public List<OptionDto> search(Map<String, Object> criteria, long limit) {
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", limit);
         }
-        return mapper.search(criteria).stream()
-                .map(PermissionConverter.INSTANCE::toOptionDto)
-                .toList();
+        return mapper.search(criteria).stream().map(po -> new OptionDto(String.valueOf(po.getId()), String.format("%s(%s)", po.getName(), po.getRemark()))).toList();
     }
 
-    /*
-     * 分页查询权限
-     */
     @Override
-    public Pagination<PermissionDto> paginate(Map<String, Object> criteria, long page, long size) {
+    public Pagination<MenuDto> paginate(Map<String, Object> criteria, long page, long size) {
         if (!criteria.containsKey("offset")) {
             criteria.put("offset", (page - 1) * size);
         }
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", size);
         }
-        return Pager.paginate(mapper, criteria, PermissionConverter.INSTANCE::toDto, page, size);
+        return Pager.paginate(mapper, criteria, MenuConverter.INSTANCE::toDto, page, size);
     }
 }

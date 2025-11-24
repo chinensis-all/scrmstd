@@ -15,19 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.platform.identity.repo;
+
+import com.mayanshe.scrmstd.platform.identity.model.Menu;
+import com.mayanshe.scrmstd.shared.contract.DomainRepository;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuRepository: 菜单仓储接口
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
+public interface MenuRepository extends DomainRepository<Menu, Long> {
 }

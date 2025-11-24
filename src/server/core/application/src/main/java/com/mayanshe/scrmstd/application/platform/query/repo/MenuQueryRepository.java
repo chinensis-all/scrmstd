@@ -15,19 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.application.platform.query.repo;
+
+import com.mayanshe.scrmstd.application.OptionDto;
+import com.mayanshe.scrmstd.application.QueryRepository;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuQueryRepository: 菜单查询仓储接口
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
+public interface MenuQueryRepository extends QueryRepository<MenuDto, OptionDto, Long> {
 }

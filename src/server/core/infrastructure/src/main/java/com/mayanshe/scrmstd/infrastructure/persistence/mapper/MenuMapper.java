@@ -15,19 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.infrastructure.persistence.mapper;
+
+import com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.Map;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuMapper: 菜单Mapper接口
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
+@Mapper
+public interface MenuMapper extends PaginateMapper<MenuPo> {
+    long insert(MenuPo po);
 
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
+    long update(MenuPo po);
+
+    Long delete(Long id);
+
+    @Select("SELECT * FROM menus WHERE id = #{id} LIMIT 1")
+    MenuPo findById(Long id);
+
+    Long findIdByCondition(Map<String, Object> criteria);
 }
