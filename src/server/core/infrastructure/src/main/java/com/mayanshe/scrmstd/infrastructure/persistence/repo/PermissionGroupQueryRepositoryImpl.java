@@ -36,11 +36,9 @@ import java.util.Optional;
 @Repository
 public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryRepository {
     private final PermissionGroupMapper mapper;
-    private final PermissionGroupConverter converter;
 
-    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper, PermissionGroupConverter converter) {
+    public PermissionGroupQueryRepositoryImpl(PermissionGroupMapper mapper) {
         this.mapper = mapper;
-        this.converter = converter;
     }
 
     /**
@@ -55,7 +53,7 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
             return Optional.empty();
         }
 
-        PermissionGroupDto dto = converter.toDto(mapper.findById(id));
+        PermissionGroupDto dto = PermissionGroupConverter.INSTANCE.toDto(mapper.findById(id));
 
         return Optional.ofNullable(dto);
     }
@@ -84,6 +82,6 @@ public class PermissionGroupQueryRepositoryImpl implements PermissionGroupQueryR
         if (!criteria.containsKey("limit")) {
             criteria.put("limit", size);
         }
-        return Pager.paginate(mapper, criteria, converter::toDto, page, size);
+        return Pager.paginate(mapper, criteria, PermissionGroupConverter.INSTANCE::toDto, page, size);
     }
 }

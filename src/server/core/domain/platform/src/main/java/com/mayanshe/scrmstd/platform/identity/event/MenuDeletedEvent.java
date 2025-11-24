@@ -15,19 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.platform.identity.event;
+
+import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuDeletedEvent: 菜单删除事件
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = false)
+public class MenuDeletedEvent extends DomainEvent {
+    private AggregateId menuId;
 }

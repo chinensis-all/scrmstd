@@ -15,19 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.application.platform.query;
+
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import com.mayanshe.scrmstd.shared.model.Pagination;
+import lombok.*;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuPaginationQuery: 查询菜单分页列表
+ *
+ * @param parentId 父菜单ID
+ * @param kind     类型
+ * @param keywords 关键字
+ * @param status   状态
+ * @param page     页码
+ * @param pageSize 每页大小
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
-}
+public record MenuPaginationQuery(
+        Long parentId,
+        Byte kind,
+        String keywords,
+        Byte status,
+        Long page,
+        Long pageSize
+) implements Query<Pagination<MenuDto>> {}

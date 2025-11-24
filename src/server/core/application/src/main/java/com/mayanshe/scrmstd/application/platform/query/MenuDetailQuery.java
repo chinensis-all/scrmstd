@@ -15,19 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.application.platform.query;
+
+import com.mayanshe.scrmstd.application.Query;
+import com.mayanshe.scrmstd.application.platform.query.dto.MenuDto;
+import lombok.*;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * MenuDetailQuery: 菜单详情查询
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
-}
+public record MenuDetailQuery(
+        Long id
+) implements Query<MenuDto> {}

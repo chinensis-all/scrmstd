@@ -15,19 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.shared.model;
+package com.mayanshe.scrmstd.application.platform.query;
+
+import com.mayanshe.scrmstd.application.OptionDto;
+import com.mayanshe.scrmstd.application.Query;
+
+import java.util.List;
 
 /**
- * AggregateId: 聚合根标识
- * @param id 主键ID
- * @param newed 是否新建的
+ * 菜单选项查询
+ *
+ * @param parentId 父菜单ID
+ * @param kind     类型
+ * @param keywords 关键字
+ * @param status   状态
  */
-public record AggregateId(long id, boolean newed) {
-    public static AggregateId of(long id) {
-        return new AggregateId(id, false);
-    }
-
-    public static AggregateId newed(long id) {
-        return new AggregateId(id, true);
-    }
-}
+public record MenuOptionQuery(
+        Long parentId,
+        Byte kind,
+        String keywords,
+        Byte status
+) implements Query<List<OptionDto>> {}
