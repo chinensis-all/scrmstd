@@ -29,6 +29,15 @@
         WHERE id = #{id}
     </select>
 
+    <select id="countByIds" parameterType="java.util.Set" resultType="Long">
+        SELECT count(1)
+        FROM permissions
+        WHERE id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <sql id="condition">
         <where>
             <if test="id != null">

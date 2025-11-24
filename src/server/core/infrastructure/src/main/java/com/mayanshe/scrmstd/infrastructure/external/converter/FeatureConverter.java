@@ -56,6 +56,7 @@ public interface FeatureConverter extends BaseConverter {
             @Mapping(target = "id", source = "id", qualifiedByName = "idToAggregateId"),
             @Mapping(target = "configurable", source = "configurable", qualifiedByName = "byteToBoolean"),
             @Mapping(target = "deleted", source = "deletedAt", qualifiedByName = "deletedAtToDeleted"),
+            @Mapping(target = "permissionIds", ignore = true),
     })
     Feature toAggregate(FeaturePo po);
 

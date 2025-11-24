@@ -15,21 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.platform.subscription.event;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
-
-import java.util.Set;
+import com.mayanshe.scrmstd.shared.base.DomainEvent;
+import com.mayanshe.scrmstd.shared.model.AggregateId;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
- * FeatureRepository: 功能仓储接口
+ * ModifyFeatureEvent: 修改SaaS功能点成功事件
  */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
-    /**
-     * 处理修改功能点权限关联
-     *
-     * @param aggregate 功能点聚合根
-     */
-    void handleModifyFeaturePermissions(Feature aggregate);
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@ToString(callSuper = false)
+public class FeatureModifiedEvent extends DomainEvent {
+    private AggregateId featureId;
+
+    private Long parentId;
+
+    private String featureName;
+
+    private String displayName;
+
+    private String description;
 }

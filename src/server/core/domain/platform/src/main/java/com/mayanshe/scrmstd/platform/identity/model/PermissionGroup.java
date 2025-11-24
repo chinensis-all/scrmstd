@@ -20,10 +20,10 @@ package com.mayanshe.scrmstd.platform.identity.model;
 import com.mayanshe.scrmstd.shared.base.Aggregate;
 import com.mayanshe.scrmstd.shared.exception.BadRequestException;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
-import com.mayanshe.scrmstd.platform.identity.event.ActivatePermissionGroupEvent;
-import com.mayanshe.scrmstd.platform.identity.event.CreatePermissionGroupEvent;
-import com.mayanshe.scrmstd.platform.identity.event.DestroyPermissionGroupEvent;
-import com.mayanshe.scrmstd.platform.identity.event.ModifyPermissionGroupEvent;
+import com.mayanshe.scrmstd.platform.identity.event.PermissionGroupActivatedEvent;
+import com.mayanshe.scrmstd.platform.identity.event.PermissionGroupCreatedEvent;
+import com.mayanshe.scrmstd.platform.identity.event.PermissionGroupDestroyedEvent;
+import com.mayanshe.scrmstd.platform.identity.event.PermissionGroupModifiedEvent;
 import lombok.*;
 
 /**
@@ -55,7 +55,7 @@ public class PermissionGroup extends Aggregate {
     public void create() {
         this.setDeleted(false);
 
-        CreatePermissionGroupEvent event = CreatePermissionGroupEvent.builder()
+        PermissionGroupCreatedEvent event = PermissionGroupCreatedEvent.builder()
                 .refId(this.getId().id())
                 .permissionGroupId(this.getId())
                 .groupName(this.getGroupName())
@@ -78,7 +78,7 @@ public class PermissionGroup extends Aggregate {
         this.setDescription(description);
         this.setDeleted(false);
 
-        ModifyPermissionGroupEvent event = ModifyPermissionGroupEvent.builder()
+        PermissionGroupModifiedEvent event = PermissionGroupModifiedEvent.builder()
                 .refId(this.getId().id())
                 .permissionGroupId(this.getId())
                 .groupName(this.getGroupName())
@@ -98,7 +98,7 @@ public class PermissionGroup extends Aggregate {
 
         this.setDeleted(true);
 
-        DestroyPermissionGroupEvent event = DestroyPermissionGroupEvent.builder()
+        PermissionGroupDestroyedEvent event = PermissionGroupDestroyedEvent.builder()
                 .refId(this.getId().id())
                 .permissionGroupId(this.getId())
                 .build();
@@ -115,7 +115,7 @@ public class PermissionGroup extends Aggregate {
 
         this.setDeleted(false);
 
-        ActivatePermissionGroupEvent event = ActivatePermissionGroupEvent.builder()
+        PermissionGroupActivatedEvent event = PermissionGroupActivatedEvent.builder()
                 .refId(this.getId().id())
                 .permissionGroupId(this.getId())
                 .build();

@@ -19,35 +19,31 @@ package com.mayanshe.scrmstd.application.platform.command.handler;
 
 import com.mayanshe.scrmstd.application.CommandHandler;
 import com.mayanshe.scrmstd.application.DomainEventPublisher;
-import com.mayanshe.scrmstd.application.platform.command.ModifyFeatureCommand;
-import com.mayanshe.scrmstd.shared.exception.ResourceNotFoundException;
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
+import com.mayanshe.scrmstd.application.platform.command.ModifyFeaturePermissionsCommand;
 import com.mayanshe.scrmstd.platform.subscription.repo.FeatureRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
- * ModifyFeatureHandler: 修改Saas功能点处理器
+ * ModifyFeaturePermissionsHandler: 修改功能点权限处理器
  */
 @Service
-public class ModifyFeatureHandler implements CommandHandler<ModifyFeatureCommand, Boolean> {
+public class ModifyFeaturePermissionsHandler implements CommandHandler<ModifyFeaturePermissionsCommand, Boolean> {
     private final FeatureRepository repository;
 
     private final DomainEventPublisher publisher;
 
-    public ModifyFeatureHandler(FeatureRepository repository, DomainEventPublisher publisher) {
+    public ModifyFeaturePermissionsHandler(FeatureRepository repository, DomainEventPublisher publisher) {
         this.repository = repository;
         this.publisher = publisher;
     }
 
     @Override
-    public Boolean handle(ModifyFeatureCommand command) {
-        Feature feature = repository.load(command.id())
-                .orElseThrow(() -> new ResourceNotFoundException("Saas功能点不存在: " + command.id()));
+    public Boolean handle(ModifyFeaturePermissionsCommand command) {
+        var feature = repository.load(command.featureId()).orElseThrow(() -> new RuntimeException("Saas功能点不存在: " + command.featureId()));
 
-        feature.modify(command.parentId(), command.featureName(), command.displayName(), command.description());
+        feature.modifyPermissions(command.permissionIds());
 
-        repository.save(feature);
+        repository.handleModifyFeaturePermissions(feature);
         publisher.confirm(feature.getEvents());
 
         return true;

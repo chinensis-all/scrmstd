@@ -15,30 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.event;
+package com.mayanshe.scrmstd.application.platform.command;
 
-import com.mayanshe.scrmstd.shared.base.DomainEvent;
-import com.mayanshe.scrmstd.shared.model.AggregateId;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.mayanshe.scrmstd.application.Command;
+
+import java.util.Set;
 
 /**
- * ModifyFeatureEvent: 修改SaaS功能点成功事件
+ * ModifyFeaturePermissionCommand: 修改功能点权限命令
+ *
+ * @param featureId     功能点ID
+ * @param permissionIds 权限ID集合
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-@ToString(callSuper = false)
-public class ModifyFeatureEvent extends DomainEvent {
-    private AggregateId featureId;
-
-    private Long parentId;
-
-    private String featureName;
-
-    private String displayName;
-
-    private String description;
-}
+public record ModifyFeaturePermissionsCommand(
+        Long featureId,
+        Set<Long> permissionIds
+) implements Command<Boolean> {}

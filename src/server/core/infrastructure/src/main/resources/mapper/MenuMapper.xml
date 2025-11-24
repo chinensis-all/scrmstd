@@ -3,7 +3,7 @@
 <mapper namespace="com.mayanshe.scrmstd.infrastructure.persistence.mapper.MenuMapper">
     <!-- 菜单(menus)表映射 -->
 
-    <insert id="insert" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo">
+    <insert id="insert" parameterType="MenuPo">
         INSERT INTO menus
         (id, parent_id, kind, name, title, path, redirect, component, icon, sort, is_external,
          external_link, keep_alive, hide_in_menu, hide_children_in_menu, requires_auth, permission,
@@ -13,7 +13,7 @@
                 #{permission}, #{status}, #{remark}, #{createdAt})
     </insert>
 
-    <update id="update" parameterType="com.mayanshe.scrmstd.infrastructure.persistence.po.MenuPo">
+    <update id="update" parameterType="MenuPo">
         UPDATE menus
         SET parent_id             = #{parentId},
             kind                  = #{kind},
@@ -68,9 +68,9 @@
         <include refid="condition"/>
     </select>
 
-    <select id="search" parameterType="java.util.Map" resultMap="BaseResultMap">
+    <select id="search" parameterType="java.util.Map" resultType="MenuPo">
         SELECT
-        <include refid="Base_Column_List"/>
+        *
         FROM menus
         <include refid="condition"/>
         ORDER BY

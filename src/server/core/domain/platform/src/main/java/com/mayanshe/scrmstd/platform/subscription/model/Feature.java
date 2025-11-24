@@ -17,14 +17,13 @@
  */
 package com.mayanshe.scrmstd.platform.subscription.model;
 
+import com.mayanshe.scrmstd.platform.subscription.event.*;
 import com.mayanshe.scrmstd.shared.exception.BadRequestException;
 import com.mayanshe.scrmstd.shared.model.AggregateId;
-import com.mayanshe.scrmstd.platform.subscription.event.ActivateFeatureEvent;
-import com.mayanshe.scrmstd.platform.subscription.event.CreateFeatureEvent;
-import com.mayanshe.scrmstd.platform.subscription.event.DestroyFeatureEvent;
-import com.mayanshe.scrmstd.platform.subscription.event.ModifyFeatureEvent;
 import com.mayanshe.scrmstd.shared.base.Aggregate;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,13 +49,15 @@ public class Feature extends Aggregate {
     @Builder.Default
     private Long version = 0L;
 
+    private Set<Long> permissionIds;
+
     /**
      * 创建功能点
      */
     public void create() {
         this.setDeleted(false);
 
-        CreateFeatureEvent event = CreateFeatureEvent.builder()
+        FeatureCreatedEvent event = FeatureCreatedEvent.builder()
                 .refId(this.getId().id())
                 .featureId(this.getId())
                 .parentId(this.parentId)
@@ -78,7 +79,7 @@ public class Feature extends Aggregate {
         this.setDisplayName(this.getDisplayName());
         this.setDescription(this.getDescription());
 
-        ModifyFeatureEvent event = ModifyFeatureEvent.builder()
+        FeatureModifiedEvent event = FeatureModifiedEvent.builder()
                 .refId(this.getId().id())
                 .featureId(this.getId())
                 .parentId(parentId)
@@ -99,7 +100,7 @@ public class Feature extends Aggregate {
 
         this.setDeleted(true);
 
-        DestroyFeatureEvent event = DestroyFeatureEvent.builder()
+        FeatureDestroyedEvent event = FeatureDestroyedEvent.builder()
                 .refId(this.getId().id())
                 .featureId(this.getId())
                 .build();
@@ -116,9 +117,22 @@ public class Feature extends Aggregate {
 
         this.setDeleted(false);
 
-        ActivateFeatureEvent event = ActivateFeatureEvent.builder()
+        FeatureActivatedEvent event = FeatureActivatedEvent.builder()
                 .refId(this.getId().id())
                 .featureId(this.getId())
+                .build();
+        this.registerEvent(event);
+    }
+
+    /**
+     * 修改功能点权限
+     */
+    public void modifyPermissions(Set<Long> permissionIds) {
+        this.setPermissionIds(permissionIds);
+
+        FeaturePermissionsModifiedEvent event = FeaturePermissionsModifiedEvent.builder()
+                .featureId(this.getId())
+                .permissionIds(permissionIds)
                 .build();
         this.registerEvent(event);
     }
