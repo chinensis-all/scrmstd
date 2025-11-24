@@ -15,21 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.repo;
+package com.mayanshe.scrmstd.bossapi.requests;
 
-import com.mayanshe.scrmstd.platform.subscription.model.Feature;
-import com.mayanshe.scrmstd.shared.contract.DomainRepository;
+import lombok.Data;
 
 import java.util.Set;
 
-/**
- * FeatureRepository: 功能仓储接口
- */
-public interface FeatureRepository extends DomainRepository<Feature, Long> {
-    /**
-     * 处理修改功能点权限关联
-     *
-     * @param aggregate 功能点聚合根
-     */
-    void handleModifyFeaturePermissions(Feature aggregate);
+@Data
+public class ModifyFeaturePermissionsRequest {
+    private Set<String> permissionIds; // 功能点对应的权限ID集合
 }

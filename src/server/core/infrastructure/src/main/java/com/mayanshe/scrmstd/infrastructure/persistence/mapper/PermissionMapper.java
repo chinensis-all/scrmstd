@@ -19,7 +19,10 @@ package com.mayanshe.scrmstd.infrastructure.persistence.mapper;
 
 import com.mayanshe.scrmstd.infrastructure.persistence.po.PermissionPo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.Map;
+import java.util.Set;
 
 /**
  * PermissionMapper: 权限Mapper接口
@@ -35,4 +38,6 @@ public interface PermissionMapper extends PaginateMapper<PermissionPo> {
     PermissionPo findById(Long id);
 
     Long findIdByCondition(Map<String, Object> criteria);
+
+    long countByIds(@Param("ids") Set<Long> ids);
 }

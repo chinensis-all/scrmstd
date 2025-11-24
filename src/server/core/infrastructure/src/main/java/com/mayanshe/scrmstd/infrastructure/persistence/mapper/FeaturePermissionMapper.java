@@ -15,30 +15,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.mayanshe.scrmstd.platform.subscription.event;
+package com.mayanshe.scrmstd.infrastructure.persistence.mapper;
 
-import com.mayanshe.scrmstd.shared.base.DomainEvent;
-import com.mayanshe.scrmstd.shared.model.AggregateId;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Set;
 
 /**
- * CreateFeatureEvent: 创建SaaS功能点成功事件
+ * FeaturePermissionMapper: 功能权限Mapper接口
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-@ToString(callSuper = false)
-public class CreateFeatureEvent extends DomainEvent {
-    private AggregateId featureId;
+@Mapper
+public interface FeaturePermissionMapper {
+    Long batchInsert(@Param("featureId") Long featureId, @Param("permissionIds") Set<Long> permissionIds);
 
-    private Long parentId;
-
-    private String featureName;
-
-    private String displayName;
-
-    private String description;
+    Long deleteByFeatureId(@Param("featureId") Long featureId);
 }
